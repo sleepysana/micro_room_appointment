@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.akira.mapper.VerifyInfoMapper">
+    <resultMap id="BaseResultMap" type="cn.akira.pojo.VerifyInfo">
+        <!--@mbg.generated-->
+        <!--@Table VERIFY_INFO-->
+        <result column="VERIFY_TYPE" jdbcType="VARCHAR" property="verifyType"/>
+        <result column="VERIFY_CODE" jdbcType="VARCHAR" property="verifyCode"/>
+        <result column="VERIFY_EMAIL" jdbcType="VARCHAR" property="verifyEmail"/>
+        <result column="VERIFY_PHONE_NO" jdbcType="VARCHAR" property="verifyPhoneNo"/>
+        <result column="GENERATE_DATE" jdbcType="TIMESTAMP" property="generateDate"/>
+    </resultMap>
+    <insert id="insertVerifyInfo" flushCache="true">
+        INSERT INTO VERIFY_INFO(verify_type, verify_code,
+        <if test="verifyEmail != null and verifyEmail != ''">
+            verify_email,
+        </if>
+        <if test="verifyPhoneNo != null and verifyPhoneNo != ''">
+            VERIFY_PHONE_NO,
+        </if>
+        generate_date)
+        VALUES (#{verifyType}, #{verifyCode},
+        <if test="verifyPhoneNo != null and verifyPhoneNo != ''">
+            #{verifyPhoneNo},
+        </if>
+        <if test="verifyEmail != null and verifyEmail != ''">
+            #{verifyEmail},
+        </if>
+        SYSDATE)
+    </insert>
+</mapper>

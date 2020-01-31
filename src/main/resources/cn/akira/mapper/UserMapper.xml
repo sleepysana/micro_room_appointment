@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.akira.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="cn.akira.pojo.User">
+        <!--@mbg.generated-->
+        <!--@Table T_USER-->
+        <id column="USER_ID" jdbcType="DECIMAL" property="userId"/>
+        <result column="login_name" jdbcType="VARCHAR" property="loginName"/>
+        <result column="login_email" jdbcType="VARCHAR" property="loginEmail"/>
+        <result column="login_phone_no" jdbcType="VARCHAR" property="loginPhoneNo"/>
+        <result column="rsa_password" jdbcType="VARCHAR" property="rsaPassword"/>
+        <result column="user_role" jdbcType="VARCHAR" property="userRole"/>
+        <result column="user_state" jdbcType="VARCHAR" property="userState"/>
+        <result column="gender" jdbcType="VARCHAR" property="gender"/>
+        <result column="birthday" jdbcType="TIMESTAMP" property="birthday"/>
+        <result column="addr" jdbcType="VARCHAR" property="addr"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="cid" jdbcType="VARCHAR" property="cid"/>
+        <result column="cid_type" jdbcType="VARCHAR" property="cidType"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        user_id, login_name, login_email, login_phone_no, rsa_password, user_role, user_state,
+        gender, birthday, addr, real_name, cid, cid_type
+    </sql>
+    <select id="querySessionCols" resultMap="BaseResultMap">
+        SELECT t.USER_ID,
+        t.user_role,
+        t.login_name,
+        t.login_email,
+        t.login_phone_no,
+        t.cid,
+        t.cid_type,
+        t.real_name,
+        t.rsa_password,
+        t.user_state
+        FROM T_USER t
+        <where>
+            <if test="userId != null">
+                AND t.user_role = #{userRole}
+            </if>
+            <if test="loginName != null and loginName != ''">
+                AND t.login_name = #{loginName}
+            </if>
+            <if test="loginEmail != null and loginEmail != ''">
+                AND t.login_email = #{loginEmail}
+            </if>
+            <if test="loginPhoneNo != null and loginPhoneNo != ''">
+                AND t.login_phone_no = #{loginPhoneNo}
+            </if>
+            <if test="cid != null and cid != ''">
+                AND t.cid = #{cid}
+            </if>
+        </where>
+
+    </select>
+</mapper>
