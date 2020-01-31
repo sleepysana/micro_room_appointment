@@ -16,4 +16,14 @@ public class VerifyInfoServiceImpl implements VerifyInfoService {
     public int insertVerifyInfo(VerifyInfo verifyInfo) throws Exception {
         return verifyInfoMapper.insertVerifyInfo(verifyInfo);
     }
+
+    @Override
+    public int deleteByConditions(VerifyInfo verifyInfo) throws Exception {
+        return verifyInfoMapper.deleteByConditions(verifyInfo);
+    }
+
+    @Override
+    public VerifyInfo queryAllByConditions(VerifyInfo verifyInfo) throws Exception {
+        return verifyInfoMapper.queryAllByConditions(verifyInfo);
+    }
 }

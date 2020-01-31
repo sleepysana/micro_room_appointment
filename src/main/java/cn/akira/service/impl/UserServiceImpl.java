@@ -26,4 +26,9 @@ public class UserServiceImpl implements UserService {
     public Integer queryCountByConditions(User user) {
         return userMapper.queryCountByConditions(user);
     }
+
+    @Override
+    public int insert(User user) throws Exception {
+        return userMapper.insert(user);
+    }
 }

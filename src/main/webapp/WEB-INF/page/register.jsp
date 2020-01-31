@@ -445,11 +445,13 @@
             if ($("#rps")[0].className !== "icon-sucessfill blank") {
                 p1flag = false;
             }
-            if (!emailFlag){
-                Dialog.warn('不对哦','请检查哈你的邮箱地址');
-            }
-            console.log('注册信息都填对了吗?',p1flag);
+
+            console.log('注册信息都填对了吗?', p1flag);
             if (p1flag) {
+                if (!emailFlag) {
+                    Dialog.warn('不对哦', '请检查哈你的邮箱地址');
+                    return;
+                }
                 resentEmailCanBeClicked = false;
                 let code = $("#randCode").val();
                 console.log(code, yzm);
@@ -457,9 +459,11 @@
                     submit();
                 } else {
                     Dialog.error("不行", "验证码不对");
+                    return;
                 }
             } else {
                 Dialog.warn("不行", "请按照要求填写注册信息");
+                return;
             }
         });
     });
@@ -473,8 +477,8 @@
                 type: "POST",
                 contentType: 'application/x-www-form-urlencoded;charset=utf-8',
                 data: {
-                    "uname": $("#username").val(),
-                    "bindEmail": $("#email").val(),
+                    "loginName": $("#username").val(),
+                    "loginEmail": $("#email").val(),
                     "password": $("#password").val(),
                     "verifyCode": $("#verifyNo").val()
                 },
@@ -483,7 +487,7 @@
                 success: function (data) {
                     console.log("注册按钮成功回调", data);
                     if (data.flag) {
-                        $("#congratulation").html("恭喜" + $("#username").val() + ",你已注册成功（但是有什么用呢?）");
+                        $("#congratulation").html("恭喜 " + $("#username").val() + ",你已注册成功");
                         $(".part2").hide();
                         $(".part4").show();
                         $(".step li").eq(2).addClass("on");
@@ -493,7 +497,7 @@
                                 $("#times").text(c);
                             },
                             after: function () {
-                                window.location.href = "${path}/register";
+                                window.location.href = "${path}/";
                             }
                         });
                     } else {

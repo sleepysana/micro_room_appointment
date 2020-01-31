@@ -28,4 +28,29 @@
         </if>
         SYSDATE)
     </insert>
+    <delete id="deleteByConditions">
+        DELETE FROM VERIFY_INFO t
+        <where>
+            <if test="verifyEmail != null and verifyEmail != ''">
+                AND t.VERIFY_EMAIL = #{verifyEmail,jdbcType=VARCHAR}
+            </if>
+            <if test="verifyPhoneNo != null and verifyPhoneNo != ''">
+                AND t.VERIFY_PHONE_NO = #{verifyPhoneNo,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </delete>
+    <select id="queryAllByConditions" resultMap="BaseResultMap">
+        SELECT VERIFY_TYPE, VERIFY_CODE,VERIFY_EMAIL,VERIFY_PHONE_NO,GENERATE_DATE FROM VERIFY_INFO t
+        <where>
+            <if test="verifyEmail != null and verifyEmail != ''">
+                AND t.VERIFY_EMAIL = #{verifyEmail,jdbcType=VARCHAR}
+            </if>
+            <if test="verifyPhoneNo != null and verifyPhoneNo != ''">
+                AND t.VERIFY_PHONE_NO = #{verifyPhoneNo,jdbcType=VARCHAR}
+            </if>
+            <if test="verifyType != null and verifyType != ''">
+                AND t.VERIFY_TYPE = #{verifyType,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
 </mapper>
