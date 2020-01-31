@@ -16,4 +16,6 @@ public interface UserService {
     User getUser(User user) throws Exception;
 
     User getUserSessionCols(User sessionUser) throws Exception;
+
+    Integer queryCountByConditions(User user);
 }

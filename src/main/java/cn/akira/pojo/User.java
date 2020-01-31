@@ -30,6 +30,8 @@ public class User implements Serializable {
 
     private String cidType;
 
+    private Date regDate;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getUserId() {
@@ -80,14 +82,6 @@ public class User implements Serializable {
         this.userRole = userRole;
     }
 
-    public String getState() {
-        return userState;
-    }
-
-    public void setState(String state) {
-        this.userState = state;
-    }
-
     public String getGender() {
         return gender;
     }
@@ -136,26 +130,39 @@ public class User implements Serializable {
         this.cidType = cidType;
     }
 
+    public String getUserState() {
+        return userState;
+    }
+
+    public void setUserState(String userState) {
+        this.userState = userState;
+    }
+
+    public Date getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(Date regDate) {
+        this.regDate = regDate;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", userId=").append(userId);
-        sb.append(", loginName=").append(loginName);
-        sb.append(", loginEmail=").append(loginEmail);
-        sb.append(", loginPhoneNo=").append(loginPhoneNo);
-        sb.append(", rsaPassword=").append(rsaPassword);
-        sb.append(", userRole=").append(userRole);
-        sb.append(", state=").append(userState);
-        sb.append(", gender=").append(gender);
-        sb.append(", birthday=").append(birthday);
-        sb.append(", addr=").append(addr);
-        sb.append(", realName=").append(realName);
-        sb.append(", cid=").append(cid);
-        sb.append(", cidType=").append(cidType);
-        sb.append("]");
-        return sb.toString();
+        return "User{" +
+                "userId=" + userId +
+                ", loginName='" + loginName + '\'' +
+                ", loginEmail='" + loginEmail + '\'' +
+                ", loginPhoneNo='" + loginPhoneNo + '\'' +
+                ", rsaPassword='" + rsaPassword + '\'' +
+                ", userRole='" + userRole + '\'' +
+                ", userState='" + userState + '\'' +
+                ", gender='" + gender + '\'' +
+                ", birthday=" + birthday +
+                ", addr='" + addr + '\'' +
+                ", realName='" + realName + '\'' +
+                ", cid='" + cid + '\'' +
+                ", cidType='" + cidType + '\'' +
+                ", regDate=" + regDate +
+                '}';
     }
 }

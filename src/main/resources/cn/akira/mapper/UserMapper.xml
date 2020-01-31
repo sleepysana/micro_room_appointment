@@ -54,4 +54,18 @@
         </where>
 
     </select>
+    <select id="queryCountByConditions" resultType="java.lang.Integer" parameterType="cn.akira.pojo.User" >
+SELECT COUNT(USER_ID) from T_USER
+        <where>
+            <if test="loginEmail != null and loginEmail != ''">
+               AND LOGIN_EMAIL = #{loginEmail}
+            </if>
+            <if test="loginName != null and loginName != ''">
+                AND LOGIN_NAME = #{loginName}
+            </if>
+            <if test="loginPhoneNo != null and loginPhoneNo != ''">
+                AND LOGIN_PHONE_NO = #{loginPhoneNo}
+            </if>
+        </where>
+    </select>
 </mapper>

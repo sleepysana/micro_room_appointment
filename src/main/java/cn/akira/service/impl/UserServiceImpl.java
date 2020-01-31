@@ -21,4 +21,9 @@ public class UserServiceImpl implements UserService {
     public User getUserSessionCols(User sessionUser) throws Exception {
         return userMapper.querySessionCols(sessionUser);
     }
+
+    @Override
+    public Integer queryCountByConditions(User user) {
+        return userMapper.queryCountByConditions(user);
+    }
 }

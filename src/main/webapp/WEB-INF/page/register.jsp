@@ -275,11 +275,12 @@
             } else {
                 $.ajax({
                     type: "POST",
-                    url: "${path}/register/checkUsername",
-                    data: {"username": $("#username").val()},
+                    url: "${path}/register/checkRegInfo",
+                    data: {"loginName": $("#username").val()},
                     dataType: "json",
                     success: function (data) {
-                        if (data.flag) {
+                        console.log(data.resource);
+                        if (data.resource === 0) {
                             $("#usernametip").css("color", "#999");
                             $("#usernametip").html(" ");
                             $("#uns").removeClass();
@@ -287,7 +288,7 @@
                             p1flag = true;
                         } else {
                             $("#usernametip").css("color", "#ff2e44");
-                            $("#usernametip").html(data.message);
+                            $("#usernametip").html("用户名已被其他用户注册");
                             $("#uns").removeClass();
                             $("#uns").addClass("icon-sucessfill blank hide");
                             p1flag = false;
@@ -367,14 +368,13 @@
             es.addClass("icon-sucessfill blank hide");
             $.ajax({
                 type: "POST",
-                url: "${path}/register/checkEmail",
+                url: "${path}/register/checkRegInfo",
                 contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-                data: {"email": $("#email").val()},
+                data: {"loginEmail": $("#email").val()},
                 dataType: "json",
                 success: function (data) {
                     console.log("邮箱占用检查成功回调 - ", data);
-                    p1flag = data.flag;
-                    if (data.flag === true) {
+                    if (data.resource === 0) {
                         es.removeClass("icon-sucessfill blank hide");
                         es.addClass("icon-sucessfill blank");
                         p1flag = true;
@@ -383,8 +383,9 @@
                         es.removeClass("icon-sucessfill blank");
                         es.addClass("icon-sucessfill blank hide");
                         emailtip.css("color", "#ff2e44");
-                        emailtip.html(data.message);
+                        emailtip.html('这个邮箱已经注册过了');
                         emailFlag = false;
+                        p1flag = false;
                     }
                 },
                 error: function (e) {
@@ -420,7 +421,6 @@
                 ____.html("");
                 _____.removeClass("icon-sucessfill blank hide");
                 _____.addClass("icon-sucessfill blank");
-                p1flag = true;
                 return true;
             }
         } else return false;
@@ -445,17 +445,21 @@
             if ($("#rps")[0].className !== "icon-sucessfill blank") {
                 p1flag = false;
             }
+            if (!emailFlag){
+                Dialog.warn('不对哦','请检查哈你的邮箱地址');
+            }
+            console.log('注册信息都填对了吗?',p1flag);
             if (p1flag) {
                 resentEmailCanBeClicked = false;
                 let code = $("#randCode").val();
-                console.log(code,yzm);
+                console.log(code, yzm);
                 if (code.toLowerCase() === yzm.toLowerCase()) {
                     submit();
                 } else {
                     Dialog.error("不行", "验证码不对");
                 }
             } else {
-                Dialog.error("不行", "请按照要求填写注册信息");
+                Dialog.warn("不行", "请按照要求填写注册信息");
             }
         });
     });
@@ -510,7 +514,10 @@
             $.ajax({
                 type: "POST",
                 contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-                data: {"email": $("#email").val()},
+                data: {
+                    "email": $("#email").val(),
+                    'loginName': $("#username").val()
+                },
                 url: "${path}/register/sendVerifyEmail",
                 dataType: "json",
                 success: function (data) {
@@ -571,18 +578,14 @@
     function submit() {
         if (p1flag) {
             var email = $("#email").val();
-            var password1 = $("#password").val();
-            var password2 = $("#rePassword").val();
             var loginName = $("#username").val();
             $.ajax({
                 type: "POST",
                 url: "${path}/register/sendVerifyEmail",
                 contentType: 'application/x-www-form-urlencoded;charset=utf-8',
                 data: {
-                    'loginName':loginName,
-                    "email": email,
-                    "password1": password1,
-                    "password2": password2
+                    'loginName': loginName,
+                    "email": email
                 },
                 dataType: "json",
                 success: function (data) {

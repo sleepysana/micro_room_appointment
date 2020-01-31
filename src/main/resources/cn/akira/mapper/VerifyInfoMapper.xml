@@ -19,12 +19,12 @@
             VERIFY_PHONE_NO,
         </if>
         generate_date)
-        VALUES (#{verifyType}, #{verifyCode},
+        VALUES (#{verifyType,jdbcType=VARCHAR}, #{verifyCode,jdbcType=VARCHAR},
         <if test="verifyPhoneNo != null and verifyPhoneNo != ''">
-            #{verifyPhoneNo},
+            #{verifyPhoneNo,jdbcType=VARCHAR},
         </if>
         <if test="verifyEmail != null and verifyEmail != ''">
-            #{verifyEmail},
+            #{verifyEmail,jdbcType=VARCHAR},
         </if>
         SYSDATE)
     </insert>
