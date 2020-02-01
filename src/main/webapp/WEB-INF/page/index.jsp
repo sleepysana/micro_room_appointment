@@ -1,16 +1,125 @@
+<%--suppress HtmlUnknownAttribute,JSUnnecessarySemicolon,ELValidationInJSP,JSUnnecessarySemicolon,JSUnusedLocalSymbols,SpellCheckingInspection,HtmlDeprecatedAttribute --%>
 <%--
   Created by IntelliJ IDEA.
   User: akira
-  Date: 2020/1/31
-  Time: 13:29
+  Date: 2019/8/11
+  Time: 12:48
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set value="${pageContext.request.contextPath}" var="path" scope="page"/>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>主页 </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>后台管理模板</title>
+    <script src="${path}/static/js/layui/layui.js"></script>
+    <script src="${path}/static/js/common/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="${path}/static/css/layui/layui.css">
+    <link rel="stylesheet" href="${path}/static/css/layui/custom1.css">
 </head>
-<body>
-<h3>这里是主页</h3>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+
+    <div class="layui-header">
+        <div class="layui-logo" id="mainTitle" onclick="iframeLocation('${path}/welcome')">管理系统主页</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="">顶部导航1</a></li>
+            <li class="layui-nav-item"><a href="">顶部导航2</a></li>
+            <li class="layui-nav-item"><a href="">顶部导航3</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">顶部导航4</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">列表1</a></dd>
+                    <dd><a href="">列表2</a></dd>
+                    <dd><a href="">列表3</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="${path}/resource/image/head/${SESSION_USER.userInfo.headIcon}" class="layui-nav-img"
+                         alt="头像">
+                    ${SESSION_USER.uname}
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="${path}/logout" id="exit">退出</a></li>
+        </ul>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">用户管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" onclick="iframeLocation('${path}/user/userList')">
+                            用户列表
+                        </a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">导航2</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">列表一</a></dd>
+                        <dd><a href="javascript:;">列表二</a></dd>
+                        <dd><a href="">超链接</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">导航3</a></li>
+                <li class="layui-nav-item"><a href="">导航4</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <iframe id="mainContent" style="height: 99.4%; width: 100%"
+                frameborder="0"></iframe>
+    </div>
+
+    <div class="layui-footer" style="height: 40px">
+        <!-- 底部固定区域 -->
+        @akira
+    </div>
+    t
+</div>
+
+<%--suppress ES6ConvertVarToLetConst --%>
+<script>
+
+    layui.use("element", function () {
+        var element = layui.elements;
+    });
+
+    $(function () {
+        load(1);
+        iframeLocation("${path}/welcome");
+        loadClose(1);
+    });
+
+    function iframeLocation(path) {
+        $("#mainContent").attr("src", path);
+    }
+
+    function load(i) {
+        layui.use('layer', function () {
+            layui.layer.load(i);
+        });
+    }
+
+    function loadClose(i) {
+        layui.use('layer', function () {
+            layui.layer.close(i);
+        });
+    }
+</script>
 </body>
 </html>

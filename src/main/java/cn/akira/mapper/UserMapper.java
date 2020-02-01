@@ -2,8 +2,6 @@ package cn.akira.mapper;
 
 import cn.akira.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Mapper
 public interface UserMapper {
