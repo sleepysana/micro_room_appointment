@@ -22,7 +22,7 @@
             <mvc:mapping path="/**/*"/>
             <!--排除这些URI,(不拦截这些URI)-->
             <mvc:exclude-mapping path="/user/login"/>
-            <mvc:exclude-mapping path="/user/doLogin"/>
+            <mvc:exclude-mapping path="/doLogin"/>
             <mvc:exclude-mapping path="/check"/>
             <mvc:exclude-mapping path="/static/**/*"/>
             <mvc:exclude-mapping path="/test/**/*.jsp"/>

@@ -11,6 +11,8 @@ public class ResponseData implements Serializable {
     private Object resource = null;
     private Integer status = 0;
     private Object customProp;
+    private Exception exceptionInfo;
+    private StackTraceElement[] errTrace;
     public ResponseData() {}
 
     public ResponseData(String message) {
@@ -46,6 +48,7 @@ public class ResponseData implements Serializable {
         this.flag = flag;
         this.resource = resource;
     }
+
 
     public String getMessage() {
         return message;
@@ -101,6 +104,22 @@ public class ResponseData implements Serializable {
 
     public void setCustomProp(Object customProp) {
         this.customProp = customProp;
+    }
+
+    public Exception getExceptionInfo() {
+        return exceptionInfo;
+    }
+
+    public StackTraceElement[] getErrTrace() {
+        return errTrace;
+    }
+
+    public void setExceptionInfo(Exception e) {
+        this.exceptionInfo = e;
+        this.setMessage(e.getMessage());
+        this.setFlag(false);
+        this.setErrDetail(Arrays.toString(e.getStackTrace()));
+        this.errTrace = e.getStackTrace();
     }
 
     @Override

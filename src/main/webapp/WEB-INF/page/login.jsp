@@ -41,7 +41,7 @@
 				</span>
 
                 <div class="wrap-input100 validate-input">
-                    <input class="input100" type="text" name="email" placeholder="邮箱">
+                    <input class="input100" type="text" id="credential" placeholder="邮箱">
                     <span class="focus-input100"></span>
                     <span class="symbol-input100">
 						<i class="fa fa-envelope" aria-hidden="true"></i>
@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="wrap-input100 validate-input">
-                    <input class="input100" type="password" name="pass" placeholder="密码">
+                    <input class="input100" type="password" id="password" placeholder="密码">
                     <span class="focus-input100"></span>
                     <span class="symbol-input100">
 						<i class="fa fa-lock" aria-hidden="true"></i>
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="container-login100-form-btn">
-                    <button class="login100-form-btn">
+                    <button class="login100-form-btn" id="login">
                         登录
                     </button>
                 </div>
@@ -78,6 +78,43 @@
         </div>
     </div>
 </div>
-
 </body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" type="text/javascript"></script>
+<script src="https://www.layuicdn.com/layui-v2.5.4/layui.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    layui.use('form', function () {
+        let layer = layui.layer;
+        $("#login").click(function () {
+            $(this).attr("disabled", "");
+            let _this = this;
+            let credential = $("#credential").val(),
+                password = $("#password").val();
+            $.ajax({
+                type: "POST",
+                url: "${path}/doLogin",
+                data: {
+                    "credential": credential,
+                    "password": password
+                },
+                dataType: "json",
+                success: function (data) {
+                    console.log('响应的JSON:',data);
+                    if (data.flag) {
+                        console.log(data.resource);
+                        window.location.href = data.resource;
+                    } else {
+                        layer.alert(data.message);
+                        $(_this).removeAttr("disabled");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    layer.alert('哦欧~ 登录发生错误了');
+                    $(_this).removeAttr("disabled");
+                }
+            })
+        })
+    });
+</script>
 </html>

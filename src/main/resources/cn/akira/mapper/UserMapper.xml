@@ -37,7 +37,10 @@
         FROM T_USER t
         <where>
             <if test="userId != null">
-                AND t.user_role = #{userRole}
+                AND t.user_id = #{userId,jdbcType=INTEGER}
+            </if>
+            <if test="userRole != null">
+                AND t.user_role = #{userRole,jdbcType=VARCHAR}
             </if>
             <if test="loginName != null and loginName != ''">
                 AND t.login_name = #{loginName}
@@ -52,7 +55,6 @@
                 AND t.cid = #{cid}
             </if>
         </where>
-
     </select>
     <select id="queryCountByConditions" resultType="java.lang.Integer" parameterType="cn.akira.pojo.User">
         SELECT COUNT(USER_ID) from T_USER
