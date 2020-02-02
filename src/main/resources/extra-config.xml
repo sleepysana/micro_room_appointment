@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configurations [
+        <!ELEMENT configurations (config+)>
+        <!ELEMENT config (property+)>
+        <!ELEMENT property (#PCDATA)>
+        <!ATTLIST config id CDATA #REQUIRED>
+        <!ATTLIST property name CDATA #REQUIRED>
+        <!ATTLIST property value CDATA #IMPLIED>
+        ]>
+<configurations>
+    <!--用户头像的ftp配置-->
+    <config id="headIconFtp">
+        <property name="hostname" value="192.168.1.7"/>
+        <property name="port" value="21"/>
+        <property name="username" value="hd_mgr"/>
+        <property name="password" value="123"/>
+    </config>
+
+    <!--RSA加解密的密钥配置-->
+    <config id="rsa">
+        <property name="publicKey">
+            MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCupVYROPOAv3qvL33jOd4hkVUTfwvjFNPbKChHkClYiZ7oAnBc5y/ouSsqk2bBJA939EJYXKFRjOJ4s8/GviwYbRzpJcgGIPhyq8PS1TTzgp0yq3H1yxpxgxc5Dl5oqeEJ945qozrhSlPQaCRfOyTWFAJbs/DHiFMxgM5S+0ih4wIDAQAB
+        </property>
+        <property name="privateKey">
+            MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAK6lVhE484C/eq8vfeM53iGRVRN/C+MU09soKEeQKViJnugCcFznL+i5KyqTZsEkD3f0QlhcoVGM4nizz8a+LBhtHOklyAYg+HKrw9LVNPOCnTKrcfXLGnGDFzkOXmip4Qn3jmqjOuFKU9BoJF87JNYUAluz8MeIUzGAzlL7SKHjAgMBAAECgYBk0PzGJGIsyFxCFOBO83DPX94EyypJhBRoRt45sXasrYUV2ZKTjsGRTpMkmMKQbAih7lb+OzrEoNd7ZhFjYRSCbnSwyZ5qefBqENneNb+v7VkBaXw2AEl3Uz8KoHdsuAZhYKSIjjVCZsfY1p3og0LjYjCLIZP1y0wLiPY2WL6RAQJBAPT6NfPdunIhY+UjVByYReiCfz4HEMIh1cU3I5SRZ7sLS6TkY9O8WruGooPFUnsvOqwTCirhl7u9z+FAcf9pXrMCQQC2gQGzaMd8NIUolT3RJiPnrA8q9P6ActiAm0s79z9MkvyVbPSMfbWgitBAIxM87pQr+1q5TIZdU1h+rtnmPUgRAkAsZHsKag+zRuG3UCOZ2u4wKBWuw9EBnOgECO3lqkPF3VIj209Lu0Il4Uvp3QQJVpGnRPv+sUqxtr/I7ci6o/mJAkAV0Bt87wQQw1I7BINr8QwPj5AMiVW10oQv8t+uHiIRq+vGjEw6UngX5R942vhcqwNIsnUoeo4Ar4p/MbTXgPGRAkAeZQqMb/Cz7Bv+7SmkowSKWv2oOuhTw8tL9rGjZhauBL5iAyQ9KE4CfpCbExreYbYFfr5soquQno2vnD2fLp7h
+        </property>
+    </config>
+
+    <!--其他零星配置-->
+    <config id="others">
+        <!--用户默认头像Base64-->
+        <property name="defaultHeadIconBase64">
+            iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAB3RJTUUH4QYICBseBhIYiQAAABd0RVh0U29mdHdhcmUAR0xEUE5HIHZlciAzLjRxhaThAAAACHRwTkdHTEQzAAAAAEqAKR8AAAAEZ0FNQQAAsY8L/GEFAAACo0lEQVR4nNXZCVITQRQG4BxhLgC0iAtujAuKiNacQIKK4oJGRQVRyBH6Bhx**BHyBEGXBA3xg13aTjB8x+NVCpFoF9nelpe1VcU1Mzf7yWhJ5mUSo5qffacgDj76WoNZ7U+e1aCBgLhux/jWkOzkADVSd89GdfazFAZNFCDwHdfRqVnhiRQk9h3X0alH5+JgTZR8d3btrWK5oFaqDVQIKEKoe++/9Tqo8EYyJKuny+8NP9relAC5aQGxQ3yc/p0GcgB6b75hwMCNJAjCtxtvT+mBhIgx7I18h/i++QpCVQQlWvz3yZPCtBABZL5DfCgPwbyoP1rxtf7/RGQJ7W2B/hy74QC8iiybv7zxHEBZCGBKkQN5kBbZNn/Q69MHKsCMejsnC3yAlDMzIzdtrpy92gNiCEyzFXM3LLVAJ/uhMQgGbkBaBfZG/Xxdp8AYmA9zTheMrL5u9GHSl8EZIi9AM4JXeaX3t86EgEZmmMv8HcN03z+AO9uHo6ADFl9/mXk8wdIxw9FQIYSx/l2V+Tl8YPEwHrfguNjRrbdHY7lGwdSIEPGjxKODRm5GWk1wNvrvTEQw7aPFI4RkDJz7d6VvrnWWwFiUiC2yNPMvNSq+X/1+up+DWShBrIuhtQyx2qL3qhXY/skkEeirQFeju0NQAN5kM/91aUre6pABdOQ392Jpcs9CqhAMrfms3ox2hNAAlQA9pXdqBZHdweQADnm7g724qXuABSQIy0/kuZazy92V0ED5ajYb3WeXdgVQAwaqE1uXvdmgwgMIiqgAMMIYkqyDG8DNNfTESEgapIAbSL7+//TfKt6MtKVAjVJYAc0X+4KgZrsjK9hs1ood8ZADYrZKvOoheHOEKguyX733ROr5oc7FGiQvnuxqvnzHSEIV/m/AQFlCtT4YJ0cAAAAAElFTkSuQmCC
+        </property>
+    </config>
+</configurations>

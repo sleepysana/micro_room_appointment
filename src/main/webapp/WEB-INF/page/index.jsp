@@ -24,7 +24,7 @@
 <div class="layui-layout layui-layout-admin">
 
     <div class="layui-header">
-        <div class="layui-logo" id="mainTitle" >管理系统主页</div>
+        <div class="layui-logo" id="mainTitle">管理系统主页</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
             <li class="layui-nav-item"><a href="">顶部导航1</a></li>
@@ -41,17 +41,17 @@
         </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-<%--                <a href="javascript:;">--%>
-<%--                    <img src="${path}/resource/image/head/${SESSION_USER.userInfo.headIcon}" class="layui-nav-img"--%>
-<%--                         alt="头像">--%>
-<%--                    ${SESSION_USER.uname}--%>
-<%--                </a>--%>
+                <a href="javascript:;">
+                    <img src="data:image/png;base64,${headIconBase64}" class="layui-nav-img"
+                         alt="头像">
+                    ${SESSION_USER.loginName}
+                </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">基本资料</a></dd>
                     <dd><a href="">安全设置</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="${path}/logout" id="exit">退出</a></li>
+            <li class="layui-nav-item"><a id="logout">退出</a></li>
         </ul>
     </div>
     <div class="layui-side layui-bg-black">
@@ -61,8 +61,8 @@
                 <li class="layui-nav-item">
                     <a class="" href="javascript:;">用户管理</a>
                     <dl class="layui-nav-child">
-<%--                        <dd><a href="javascript:;" onclick="iframeLocation('${path}/user/userList')">--%>
-                            用户列表
+                        <%--                        <dd><a href="javascript:;" onclick="iframeLocation('${path}/user/userList')">--%>
+                        用户列表
                         </a></dd>
                     </dl>
                 </li>
@@ -92,8 +92,8 @@
     t
 </div>
 
-<%--suppress ES6ConvertVarToLetConst --%>
-<script>
+<%--suppress ES6ConvertVarToLetConst, JSUnresolvedVariable --%>
+<script type="text/javascript">
 
     layui.use("element", function () {
         var element = layui.elements;
@@ -109,6 +109,17 @@
         $("#mainContent").attr("src", path);
     }
 
+    $("#logout").click(function () {
+        $.ajax({
+            type: 'GET',
+            url:'${path}/logout',
+            success:function (data) {
+                console.log(data);
+                window.location.href='${path}';
+            }
+        })
+    });
+
     function load(i) {
         layui.use('layer', function () {
             layui.layer.load(i);
@@ -120,6 +131,8 @@
             layui.layer.close(i);
         });
     }
+
+
 </script>
 </body>
 </html>

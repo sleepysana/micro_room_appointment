@@ -3,16 +3,22 @@ package cn.akira.controller;
 import cn.akira.pojo.ResponseData;
 import cn.akira.pojo.User;
 import cn.akira.service.UserService;
+import cn.akira.util.ConfigUtil;
+import cn.akira.util.FtpUtil;
 import cn.akira.util.RsaUtil;
 import cn.akira.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.xml.sax.SAXException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.Map;
 
@@ -42,12 +48,29 @@ public class MainController {
 */
 
     @RequestMapping
-    public String init(HttpServletRequest request) {
-        Object session_user = request.getSession().getAttribute("SESSION_USER");
-        if (session_user == null) {
+    public String init(HttpServletRequest request, Model model) throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+        User sessionUser = (User) request.getSession().getAttribute("SESSION_USER");
+        //如果会话中不存在用户信息则返回登录页面
+        if (sessionUser == null) {
             return "login";
-        } else
-            return "index";
+        }
+        String headIconBase64; //用户头像
+        if (sessionUser.getHdFileName() != null) {//如果用户设置过头像
+            Map<String, Object> ftpMap = ConfigUtil.getHeadIconFtpInfo(); //用户头像的FTP信息
+            headIconBase64 = FtpUtil.readTxtFile(//从FTP中获取用户头像信息
+                    (String) ftpMap.get("hostname"),
+                    (int) ftpMap.get("port"),
+                    (String) ftpMap.get("username"),
+                    (String) ftpMap.get("password"),
+                    Integer.toString(sessionUser.getUserId()),
+                    sessionUser.getHdFileName()
+            );
+        } else {//若用户未设置过头像，则使用默认头像
+            headIconBase64 = ConfigUtil.getConfigTagValue("others", "defaultHeadIconBase64");
+        }
+        model.addAttribute("SESSION_USER", sessionUser);
+        model.addAttribute("headIconBase64", headIconBase64);
+        return "index";
     }
 
     @RequestMapping("/register")
@@ -105,6 +128,15 @@ public class MainController {
             e.printStackTrace();
             responseData.setExceptionInfo(e);
         }
+        return responseData;
+    }
+
+    @RequestMapping("/logout")
+    @ResponseBody
+    public ResponseData logout(HttpSession session) {
+        ResponseData responseData = new ResponseData();
+        session.removeAttribute("SESSION_USER");
+        session.removeAttribute("headIconBase64");
         return responseData;
     }
 }

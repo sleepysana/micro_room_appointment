@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE inventory [
+        <!ELEMENT inventory (book+)>
+        <!ELEMENT book (title,author+,publisher,isbn,price)>
+        <!ELEMENT title (#PCDATA)>
+        <!ELEMENT author (#PCDATA)>
+        <!ELEMENT publisher (#PCDATA)>
+        <!ELEMENT isbn (#PCDATA)>
+        <!ELEMENT price (#PCDATA)>
+        <!ATTLIST book year CDATA #REQUIRED>
+        ]>
+<inventory>
+    <book year="2000">
+        <title>Snow Crash</title>
+        <author>Neal Stephenson</author>
+        <publisher>Spectra</publisher>
+        <isbn>0553380958</isbn>
+        <price>14.95</price>
+    </book>
+    <book year="2005">
+        <title>Burning Tower</title>
+        <author>Larry Niven</author>
+        <author>Jerry Pournelle</author>
+        <publisher>Pocket</publisher>
+        <isbn>0743416910</isbn>
+        <price>5.99</price>
+    </book>
+    <book year="1995">
+        <title>Zodiac</title>
+        <author>Neal Stephenson</author>
+        <publisher>Spectra</publisher>
+        <isbn>0553573862</isbn>
+        <price>7.50</price>
+    </book>
+</inventory>

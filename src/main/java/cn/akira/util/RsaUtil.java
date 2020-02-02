@@ -18,7 +18,7 @@ import java.util.List;
 public class RsaUtil {
 
     public static String encrypt(String originalString) throws Exception{
-        String pubKeyStr = readKey().get(0);
+        String pubKeyStr = ConfigUtil.getRsaPublicKey();
         byte[] decodedPubKeyStr = Base64.decodeBase64(pubKeyStr);
         RSAPublicKey pubKey = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(decodedPubKeyStr));
         Cipher cipher = Cipher.getInstance("RSA");
@@ -27,7 +27,7 @@ public class RsaUtil {
     }
 
     public static String decrypt(String encryptedString) throws Exception{
-        String prvKeyStr = readKey().get(1);
+        String prvKeyStr = ConfigUtil.getRsaPrivateKey();
         byte[] encryptedStringBytes = Base64.decodeBase64(encryptedString.getBytes(StandardCharsets.UTF_8));
         byte[] decodedPrvKey = Base64.decodeBase64(prvKeyStr);
         RSAPrivateKey prvKey = (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(decodedPrvKey));
@@ -56,17 +56,5 @@ public class RsaUtil {
             System.err.println(data.getMessage());
         }
         return data;
-    }
-    private  static List<String> readKey() throws IOException {
-        File file = (File)getFile("rsa.keystore").getResource();
-        FileInputStream fis = new FileInputStream(file);
-        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-        String line;
-        List<String> keyList = new ArrayList<>();
-        while ((line = br.readLine()) != null) {
-            keyList.add(line);
-        }
-        br.close();
-        return keyList;
     }
 }

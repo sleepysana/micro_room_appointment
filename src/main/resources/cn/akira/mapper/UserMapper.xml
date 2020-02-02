@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="cn.akira.pojo.User">
         <!--@mbg.generated-->
         <!--@Table T_USER-->
-        <id column="USER_ID" jdbcType="DECIMAL" property="userId"/>
+        <id column="USER_ID" jdbcType="INTEGER" property="userId"/>
         <result column="login_name" jdbcType="VARCHAR" property="loginName"/>
         <result column="login_email" jdbcType="VARCHAR" property="loginEmail"/>
         <result column="login_phone_no" jdbcType="VARCHAR" property="loginPhoneNo"/>
@@ -17,6 +17,8 @@
         <result column="real_name" jdbcType="VARCHAR" property="realName"/>
         <result column="cid" jdbcType="VARCHAR" property="cid"/>
         <result column="cid_type" jdbcType="VARCHAR" property="cidType"/>
+        <result column="reg_date" jdbcType="DATE" property="regDate"/>
+        <result column="hd_file_name" jdbcType="VARCHAR" property="hdFileName"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
@@ -33,7 +35,8 @@
         t.cid_type,
         t.real_name,
         t.rsa_password,
-        t.user_state
+        t.user_state,
+        t.HD_FILE_NAME
         FROM T_USER t
         <where>
             <if test="userId != null">

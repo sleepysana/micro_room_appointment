@@ -30,6 +30,8 @@ public class User implements Serializable {
 
     private String cidType;
 
+    private String hdFileName;
+
     private Date regDate;
 
     private static final long serialVersionUID = 1L;
@@ -144,6 +146,14 @@ public class User implements Serializable {
 
     public void setRegDate(Date regDate) {
         this.regDate = regDate;
+    }
+
+    public String getHdFileName() {
+        return hdFileName;
+    }
+
+    public void setHdFileName(String hdFileName) {
+        this.hdFileName = hdFileName;
     }
 
     @Override
