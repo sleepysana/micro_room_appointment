@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.akira.mapper.RoomMapper">
+    <resultMap id="BaseResultMap" type="cn.akira.pojo.Room">
+        <!--@mbg.generated-->
+        <!--@Table T_ROOM-->
+        <id column="ROOM_ID" jdbcType="INTEGER" property="roomId"/>
+        <result column="ROOM_NAME" jdbcType="VARCHAR" property="roomName"/>
+        <result column="ROOM_TYPE" jdbcType="VARCHAR" property="roomType"/>
+        <result column="SEATS" jdbcType="INTEGER" property="seats"/>
+        <result column="BUILDING_ID" jdbcType="INTEGER" property="buildingId"/>
+        <result column="ROOM_STATE" jdbcType="VARCHAR" property="roomState"/>
+        <result column="LOCK_REASON" jdbcType="VARCHAR" property="lockReason"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        ROOM_ID, ROOM_NAME, ROOM_TYPE, SEATS, BUILDING_ID, ROOM_STATE, LOCK_REASON
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from T_ROOM
+        where ROOM_ID = #{roomId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        <!--@mbg.generated-->
+        delete from T_ROOM
+        where ROOM_ID = #{roomId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="cn.akira.pojo.Room">
+        <!--@mbg.generated-->
+        insert into T_ROOM (
+        ROOM_ID,
+        ROOM_NAME,
+        ROOM_TYPE,
+        SEATS,
+        BUILDING_ID,
+        ROOM_STATE,
+        LOCK_REASON)
+        values (
+        #{roomId,jdbcType=INTEGER},
+        #{roomName,jdbcType=VARCHAR},
+        #{roomType,jdbcType=VARCHAR},
+        #{seats,jdbcType=INTEGER},
+        #{buildingId,jdbcType=INTEGER},
+        #{roomState,jdbcType=VARCHAR},
+        #{lockReason,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="cn.akira.pojo.Room">
+        <!--@mbg.generated-->
+        insert into T_ROOM
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roomId != null">
+                ROOM_ID,
+            </if>
+            <if test="roomName != null">
+                ROOM_NAME,
+            </if>
+            <if test="roomType != null">
+                ROOM_TYPE,
+            </if>
+            <if test="seats != null">
+                SEATS,
+            </if>
+            <if test="buildingId != null">
+                BUILDING_ID,
+            </if>
+            <if test="roomState != null">
+                ROOM_STATE,
+            </if>
+            <if test="lockReason != null">
+                LOCK_REASON,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roomId != null">
+                #{roomId,jdbcType=INTEGER},
+            </if>
+            <if test="roomName != null">
+                #{roomName,jdbcType=VARCHAR},
+            </if>
+            <if test="roomType != null">
+                #{roomType,jdbcType=VARCHAR},
+            </if>
+            <if test="seats != null">
+                #{seats,jdbcType=INTEGER},
+            </if>
+            <if test="buildingId != null">
+                #{buildingId,jdbcType=INTEGER},
+            </if>
+            <if test="roomState != null">
+                #{roomState,jdbcType=VARCHAR},
+            </if>
+            <if test="lockReason != null">
+                #{lockReason,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.akira.pojo.Room">
+        <!--@mbg.generated-->
+        update T_ROOM
+        <set>
+            <if test="roomName != null">
+                ROOM_NAME = #{roomName,jdbcType=VARCHAR},
+            </if>
+            <if test="roomType != null">
+                ROOM_TYPE = #{roomType,jdbcType=VARCHAR},
+            </if>
+            <if test="seats != null">
+                SEATS = #{seats,jdbcType=INTEGER},
+            </if>
+            <if test="buildingId != null">
+                BUILDING_ID = #{buildingId,jdbcType=INTEGER},
+            </if>
+            <if test="roomState != null">
+                ROOM_STATE = #{roomState,jdbcType=VARCHAR},
+            </if>
+            <if test="lockReason != null">
+                LOCK_REASON = #{lockReason,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ROOM_ID = #{roomId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.akira.pojo.Room">
+        <!--@mbg.generated-->
+        update T_ROOM
+        set ROOM_NAME = #{roomName,jdbcType=VARCHAR},
+        ROOM_TYPE = #{roomType,jdbcType=VARCHAR},
+        SEATS = #{seats,jdbcType=INTEGER},
+        BUILDING_ID = #{buildingId,jdbcType=INTEGER},
+        ROOM_STATE = #{roomState,jdbcType=VARCHAR},
+        LOCK_REASON = #{lockReason,jdbcType=VARCHAR}
+        where ROOM_ID = #{roomId,jdbcType=INTEGER}
+    </update>
+    <select id="queryAll" resultMap="BaseResultMap">
+        SELECT t.ROOM_ID,
+               t.ROOM_NAME,
+               F_GET_ATTRIBUTE('room_type', t.ROOM_TYPE) AS ROOM_TYPE,
+               t.SEATS,
+               t.BUILDING_ID,
+               F_GET_ATTRIBUTE('room_state', t.ROOM_STATE) AS ROOM_STATE,
+               t.LOCK_REASON
+        FROM T_ROOM t
+    </select>
+</mapper>

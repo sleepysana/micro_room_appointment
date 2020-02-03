@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.akira.mapper.ColCommMapper">
+  <resultMap id="BaseResultMap" type="cn.akira.pojo.ColComm">
+    <!--@mbg.generated-->
+    <!--@Table COL_COMM-->
+    <result column="DESCRIBE" jdbcType="VARCHAR" property="describe" />
+    <result column="COL_NAME" jdbcType="VARCHAR" property="colName" />
+    <result column="ATTRIBUTE_KEY" jdbcType="VARCHAR" property="attributeKey" />
+    <result column="ATTRIBUTE_VALUE" jdbcType="VARCHAR" property="attributeValue" />
+  </resultMap>
+  <select id="queryAttributes" resultMap="BaseResultMap">
+    SELECT ATTRIBUTE_KEY, ATTRIBUTE_VALUE FROM COL_COMM T WHERE COL_NAME = #{colName}
+  </select>
+
+</mapper>
