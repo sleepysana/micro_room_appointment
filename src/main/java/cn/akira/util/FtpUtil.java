@@ -1,13 +1,18 @@
 package cn.akira.util;
 
+import cn.akira.pojo.User;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class FtpUtil {
     /**
@@ -41,5 +46,24 @@ public class FtpUtil {
             }
             return stringBuilder.toString();
         } else throw new IOException("ftp连接失败");
+    }
+
+    public static String getUserIconBase64(User user) throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+        String headIconBase64;
+        if (user.getHdFileName() != null) {//如果用户设置过头像
+            Map<String, Object> ftpMap = ConfigUtil.getHeadIconFtpInfo(); //用户头像的FTP信息
+            headIconBase64 = FtpUtil.readTxtFile(//从FTP中获取用户头像信息
+                    (String) ftpMap.get("hostname"),
+                    (int) ftpMap.get("port"),
+                    (String) ftpMap.get("username"),
+                    (String) ftpMap.get("password"),
+                    Integer.toString(user.getUserId()),
+                    user.getHdFileName()
+            );
+        } else {//若用户未设置过头像，则使用默认头像
+            headIconBase64 = ConfigUtil.getConfigTagValue("others", "defaultHeadIconBase64");
+        }
+
+        return headIconBase64;
     }
 }

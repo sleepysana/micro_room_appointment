@@ -54,20 +54,7 @@ public class MainController {
         if (sessionUser == null) {
             return "login";
         }
-        String headIconBase64; //用户头像
-        if (sessionUser.getHdFileName() != null) {//如果用户设置过头像
-            Map<String, Object> ftpMap = ConfigUtil.getHeadIconFtpInfo(); //用户头像的FTP信息
-            headIconBase64 = FtpUtil.readTxtFile(//从FTP中获取用户头像信息
-                    (String) ftpMap.get("hostname"),
-                    (int) ftpMap.get("port"),
-                    (String) ftpMap.get("username"),
-                    (String) ftpMap.get("password"),
-                    Integer.toString(sessionUser.getUserId()),
-                    sessionUser.getHdFileName()
-            );
-        } else {//若用户未设置过头像，则使用默认头像
-            headIconBase64 = ConfigUtil.getConfigTagValue("others", "defaultHeadIconBase64");
-        }
+        String headIconBase64=FtpUtil.getUserIconBase64(sessionUser);
         model.addAttribute("SESSION_USER", sessionUser);
         model.addAttribute("headIconBase64", headIconBase64);
         return "index";
