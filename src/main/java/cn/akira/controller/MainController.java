@@ -3,7 +3,6 @@ package cn.akira.controller;
 import cn.akira.pojo.ResponseData;
 import cn.akira.pojo.User;
 import cn.akira.service.UserService;
-import cn.akira.util.ConfigUtil;
 import cn.akira.util.FtpUtil;
 import cn.akira.util.RsaUtil;
 import cn.akira.util.ValidateUtil;
@@ -27,7 +26,6 @@ public class MainController {
 
     @Autowired
     private UserService userService;
-
 
     //原来是在web.xml中将初始化页面设置为init.jsp, 再在该页面初始化时请求此方法，从而根据会话中是否有用户登录来重定向页面
     //现已将页面初始化方法改为此Controller类中的init方法，遂弃用此方法

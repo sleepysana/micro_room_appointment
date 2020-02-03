@@ -241,13 +241,18 @@
       <artifactId>ojdbc6</artifactId>
       <version>${oracle.version}</version>
     </dependency>
-
+    <!--ftp-->
     <dependency>
       <groupId>commons-net</groupId>
       <artifactId>commons-net</artifactId>
       <version>3.6</version>
     </dependency>
-
+    <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jsch</artifactId>
+      <version>0.1.55</version>
+    </dependency>
+    <!--ftp end-->
   </dependencies>
 
   <build>
