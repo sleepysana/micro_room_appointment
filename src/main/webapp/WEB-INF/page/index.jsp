@@ -61,9 +61,11 @@
                 <li class="layui-nav-item">
                     <a class="" href="javascript:;">教室</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" onclick="iframeLocation('${path}/room/toRoomList')">
-                            教室预约
-                        </a></dd>
+                        <c:if test="${SESSION_USER.userRole =='01'}">
+                            <dd><a href="javascript:;" onclick="iframeLocation('${path}/room/toRoomList')">
+                                教室预约
+                            </a></dd>
+                        </c:if>
                     </dl>
                 </li>
                 <%--<li class="layui-nav-item">

@@ -248,7 +248,7 @@
         }
     }
 
-    function showEditUser(id) {
+    function showUseInfo(id) {
         parent.layer.open({
             type: 2,
             moveOut: true,
@@ -263,35 +263,19 @@
         });
     }
 
-    function deleteUser(id) {
-        if (id <= 981009) {
-            return null;
-        }
-        layer.confirm('确定要干掉这个人么?', {
-            btn: ['当然', '再考虑']
-        }, function () {
-            layer.load(1);
-            $.ajax({
-                type: "post",
-                url: "${path}/user/deleteUser",
-                data: {"id": id},
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    console.log("删除用户成功回调:", data);
-                    if (data.flag) {
-                        layer.closeAll();
-                        layer.alert(data.message);
-                        TABLE_INS.reload();
-                    }
-                    if (data.errInfo !== null) {
-                        goToErrorPage(data);
-                    }
-                }
-            })
-        }, function () {
-            layer.closeAll();
-        })
+    function applyUse(roomId) {
+        parent.layer.open({
+            type: 2,
+            moveOut: true,
+            scrollbar: false,
+            title: '预约教室: ' + roomId,
+            closeBtn: 1,
+            area: ['1000px', '620px'],
+            content: '${path}/room/showApplyUse/' + roomId,
+            end: function () {
+                layui.table.reload("roomListData");
+            }
+        });
     }
 
     function goToErrorPage(errData) {
@@ -359,11 +343,11 @@
                 {
                     field: 'operation', title: '操作', fixed: 'right',
                     templet: '<div><div class="layui-btn-group">' +
-                        '  <button type="button" class="layui-btn layui-btn-xs id{{d.id}}" onclick="showEditUser({{d.id}})">' +
-                        '    <i class="layui-icon">&#xe642;</i>' +
+                        '  <button type="button" class="layui-btn layui-btn-xs id{{d.id}}" onclick="showUseInfo({{d.roomId}})">' +
+                        '    <i class="layui-icon">&#xe615;</i>' +
                         '  </button>' +
-                        '  <button type="button" class="layui-btn layui-btn-xs layui-btn-danger id{{d.id}}" onclick="deleteUser({{d.id}})">' +
-                        '    <i class="layui-icon">&#xe640;</i>' +
+                        '  <button type="button" class="layui-btn layui-btn-xs id{{d.id}}" onclick="applyUse({{d.roomId}})">' +
+                        '    <i class="layui-icon">&#xe66c;</i>' +
                         '</div></div>',
                     width: 85
                 }

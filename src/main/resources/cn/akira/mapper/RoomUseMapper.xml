@@ -1,99 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.akira.mapper.RoomUseMapper">
-  <resultMap id="BaseResultMap" type="cn.akira.pojo.RoomUse">
-    <!--@mbg.generated-->
-    <!--@Table T_ROOM_USE-->
+    <resultMap id="BaseResultMap" type="cn.akira.pojo.RoomUse">
+        <!--@mbg.generated-->
+        <!--@Table T_ROOM_USE-->
 
-    <result column="ROOM_ID" jdbcType="INTEGER" property="roomId" />
-    <result column="APPLY_USER_ID" jdbcType="INTEGER" property="applyUserId" />
-    <result column="APPLY_DATE" jdbcType="TIMESTAMP" property="applyDate" />
-    <result column="APPLY_REASON" jdbcType="CLOB" property="applyReason" />
-    <result column="START_DATE" jdbcType="TIMESTAMP" property="startDate" />
-    <result column="END_DATE" jdbcType="TIMESTAMP" property="endDate" />
-    <result column="APPROVE_STATE" jdbcType="VARCHAR" property="approveState" />
-    <result column="APPROVE_DATE" jdbcType="TIMESTAMP" property="approveDate" />
-    <result column="APPROVE_USER_ID" jdbcType="INTEGER" property="approveUserId" />
-    <result column="REJECT_REASON" jdbcType="CLOB" property="rejectReason" />
-    <result column="APP_SEQ" jdbcType="INTEGER" property="appSeq" />
-  </resultMap>
-  <insert id="insert" parameterType="cn.akira.pojo.RoomUse">
-    <!--@mbg.generated-->
-    insert into T_ROOM_USE (ROOM_ID, APPLY_USER_ID, APPLY_DATE, 
-      APPLY_REASON, START_DATE, END_DATE, 
-      APPROVE_STATE, APPROVE_DATE, APPROVE_USER_ID, 
-      REJECT_REASON,APP_SEQ)
-    values (#{roomId,jdbcType=INTEGER}, #{applyUserId,jdbcType=INTEGER}, #{applyDate,jdbcType=TIMESTAMP}, 
-      #{applyReason,jdbcType=CLOB}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, 
-      #{approveState,jdbcType=VARCHAR}, #{approveDate,jdbcType=TIMESTAMP}, #{approveUserId,jdbcType=INTEGER}, 
-      #{rejectReason,jdbcType=CLOB},F_GET_APP_SEQ)
-  </insert>
-  <insert id="insertSelective" parameterType="cn.akira.pojo.RoomUse">
-    <!--@mbg.generated-->
-    insert into T_ROOM_USE
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="roomId != null">
+        <result column="ROOM_ID" jdbcType="INTEGER" property="roomId"/>
+        <result column="APPLY_USER_ID" jdbcType="INTEGER" property="applyUserId"/>
+        <result column="APPLY_DATE" jdbcType="TIMESTAMP" property="applyDate"/>
+        <result column="APPLY_REASON" jdbcType="CLOB" property="applyReason"/>
+        <result column="START_DATE" jdbcType="TIMESTAMP" property="startDate"/>
+        <result column="END_DATE" jdbcType="TIMESTAMP" property="endDate"/>
+        <result column="APPROVE_STATE" jdbcType="VARCHAR" property="approveState"/>
+        <result column="APPROVE_DATE" jdbcType="TIMESTAMP" property="approveDate"/>
+        <result column="APPROVE_USER_ID" jdbcType="INTEGER" property="approveUserId"/>
+        <result column="REJECT_REASON" jdbcType="CLOB" property="rejectReason"/>
+        <result column="APP_SEQ" jdbcType="INTEGER" property="appSeq"/>
+    </resultMap>
+    <insert id="insert" parameterType="cn.akira.pojo.RoomUse">
+        <!--@mbg.generated-->
+        insert into T_ROOM_USE (
         ROOM_ID,
-      </if>
-      <if test="applyUserId != null">
         APPLY_USER_ID,
-      </if>
-      <if test="applyDate != null">
         APPLY_DATE,
-      </if>
-      <if test="applyReason != null">
         APPLY_REASON,
-      </if>
-      <if test="startDate != null">
         START_DATE,
-      </if>
-      <if test="endDate != null">
         END_DATE,
-      </if>
-      <if test="approveState != null">
+
         APPROVE_STATE,
-      </if>
-      <if test="approveDate != null">
-        APPROVE_DATE,
-      </if>
-      <if test="approveUserId != null">
-        APPROVE_USER_ID,
-      </if>
-      <if test="rejectReason != null">
-        REJECT_REASON,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="roomId != null">
-        #{roomId,jdbcType=INTEGER},
-      </if>
-      <if test="applyUserId != null">
+        APP_SEQ)
+        values (#{roomId,jdbcType=INTEGER},
         #{applyUserId,jdbcType=INTEGER},
-      </if>
-      <if test="applyDate != null">
-        #{applyDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="applyReason != null">
-        #{applyReason,jdbcType=CLOB},
-      </if>
-      <if test="startDate != null">
-        #{startDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endDate != null">
-        #{endDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="approveState != null">
+        SYSDATE,
+        #{applyReason,jdbcType=CLOB}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP},
         #{approveState,jdbcType=VARCHAR},
-      </if>
-      <if test="approveDate != null">
-        #{approveDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="approveUserId != null">
-        #{approveUserId,jdbcType=INTEGER},
-      </if>
-      <if test="rejectReason != null">
-        #{rejectReason,jdbcType=CLOB},
-      </if>
-    </trim>
-  </insert>
+        F_GET_APP_SEQ)
+    </insert>
+    <insert id="insertSelective" parameterType="cn.akira.pojo.RoomUse">
+        <!--@mbg.generated-->
+        insert into T_ROOM_USE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roomId != null">
+                ROOM_ID,
+            </if>
+            <if test="applyUserId != null">
+                APPLY_USER_ID,
+            </if>
+            <if test="applyDate != null">
+                APPLY_DATE,
+            </if>
+            <if test="applyReason != null">
+                APPLY_REASON,
+            </if>
+            <if test="startDate != null">
+                START_DATE,
+            </if>
+            <if test="endDate != null">
+                END_DATE,
+            </if>
+            <if test="approveState != null">
+                APPROVE_STATE,
+            </if>
+            <if test="approveDate != null">
+                APPROVE_DATE,
+            </if>
+            <if test="approveUserId != null">
+                APPROVE_USER_ID,
+            </if>
+            <if test="rejectReason != null">
+                REJECT_REASON,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roomId != null">
+                #{roomId,jdbcType=INTEGER},
+            </if>
+            <if test="applyUserId != null">
+                #{applyUserId,jdbcType=INTEGER},
+            </if>
+            <if test="applyDate != null">
+                #{applyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyReason != null">
+                #{applyReason,jdbcType=CLOB},
+            </if>
+            <if test="startDate != null">
+                #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null">
+                #{endDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="approveState != null">
+                #{approveState,jdbcType=VARCHAR},
+            </if>
+            <if test="approveDate != null">
+                #{approveDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="approveUserId != null">
+                #{approveUserId,jdbcType=INTEGER},
+            </if>
+            <if test="rejectReason != null">
+                #{rejectReason,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
 </mapper>
