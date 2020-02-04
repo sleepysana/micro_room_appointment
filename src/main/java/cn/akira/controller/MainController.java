@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class MainController {
 */
 
     @RequestMapping
-    public String init(HttpServletRequest request, Model model) throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+    public String init(HttpServletRequest request, Model model) throws SAXException, ParserConfigurationException, XPathExpressionException, IOException, TransformerException {
         User sessionUser = (User) request.getSession().getAttribute("SESSION_USER");
         //如果会话中不存在用户信息则返回登录页面
         if (sessionUser == null) {

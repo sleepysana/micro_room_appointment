@@ -14,8 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/room")
@@ -31,42 +33,39 @@ public class RoomController {
     private ColCommService colCommService;
 
     @RequestMapping("/toRoomList")
-    public String toAppointmentRoom(){
+    public String toAppointmentRoom() {
         return "/room/listRooms";
     }
 
-    @RequestMapping("/listRooms")
+    @RequestMapping("/queryRooms")
     @ResponseBody
-    public ResponseData listRooms(){
+    public ResponseData listRooms(Room conditions) {
         ResponseData responseData = new ResponseData();
         try {
-            List<Room> rooms = roomService.queryAll();
-            LinkedList<Room> newRoomsList = new LinkedList<>();
-            for (Room room : rooms) {
-                Integer buildingId = room.getBuildingId();
-                Building building = buildingService.queryByPrimaryKey(buildingId);
-                room.setBuilding(building);
-                newRoomsList.add(room);
-            }
-            String s = JSON.toJSONString(newRoomsList);
+            List<Room> rooms = roomService.queryByConditions(conditions);
+            String s = JSON.toJSONString(rooms);
             Object roomData = JSONObject.parse(s);
             responseData.setResource(roomData);
             responseData.setCustomProp(rooms.size());
             responseData.setStatus(0);
             return responseData;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             responseData.setExceptionInfo(e);
         }
         return responseData;
     }
 
-    @RequestMapping("/getRoomTypeSelectList")
+    @RequestMapping("/getSelectList")
     @ResponseBody
-    public ResponseData getRoomTypeSelectList(){
+    public ResponseData getRoomTypeSelectList() throws Exception {
         ResponseData responseData = new ResponseData();
+        Map<String, List<?>> selectMap = new HashMap<>();
         List<ColComm> roomTypes = colCommService.queryAttributes("room_type");
-        responseData.setResource(roomTypes);
+        List<Building> buildings = buildingService.queryAllIdAndName();
+        selectMap.put("roomTypes", roomTypes);
+        selectMap.put("buildings", buildings);
+        responseData.setResource(selectMap);
         return responseData;
     }
 }

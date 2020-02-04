@@ -11,6 +11,11 @@
         <result column="BUILDING_ID" jdbcType="INTEGER" property="buildingId"/>
         <result column="ROOM_STATE" jdbcType="VARCHAR" property="roomState"/>
         <result column="LOCK_REASON" jdbcType="VARCHAR" property="lockReason"/>
+        <collection property="building" ofType="cn.akira.pojo.Building">
+            <id column="BUILDING_ID" jdbcType="INTEGER" property="buildingId"/>
+            <result column="BUILDING_NAME" jdbcType="VARCHAR" property="buildingName"/>
+            <result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+        </collection>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
@@ -136,11 +141,33 @@
     <select id="queryAll" resultMap="BaseResultMap">
         SELECT t.ROOM_ID,
                t.ROOM_NAME,
-               F_GET_ATTRIBUTE('room_type', t.ROOM_TYPE) AS ROOM_TYPE,
+               F_GET_ATTRIBUTE('room_type', t.ROOM_TYPE)   AS ROOM_TYPE,
                t.SEATS,
                t.BUILDING_ID,
                F_GET_ATTRIBUTE('room_state', t.ROOM_STATE) AS ROOM_STATE,
                t.LOCK_REASON
         FROM T_ROOM t
+    </select>
+    <select id="queryByConditions" resultMap="BaseResultMap">
+        SELECT r.ROOM_ID,
+        r.ROOM_NAME,
+        F_GET_ATTRIBUTE('room_type', r.ROOM_TYPE) AS ROOM_TYPE,
+        r.SEATS,
+        b.BUILDING_NAME,
+        F_GET_ATTRIBUTE('room_state', r.ROOM_STATE) AS ROOM_STATE,
+        r.LOCK_REASON
+        FROM T_ROOM r,T_BUILDING b
+        WHERE r.BUILDING_ID = b.BUILDING_ID
+        <if test="roomId!=null">
+            AND ROOM_ID LIKE #{roomId,jdbcType=INTEGER}||'%'
+        </if>
+        <if test="roomType != null and roomType != ''">
+            AND r.ROOM_TYPE = #{roomType,jdbcType=VARCHAR}
+        </if>
+        <if test="buildingId != null">
+            AND r.BUILDING_ID=#{buildingId,jdbcType=INTEGER}
+        </if>
+
+        ORDER BY ROOM_ID
     </select>
 </mapper>

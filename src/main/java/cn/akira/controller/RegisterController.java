@@ -63,6 +63,15 @@ public class RegisterController {
                               @RequestParam("password") String password) throws Exception {
         ResponseData responseData = new ResponseData();
         VerifyInfo verifyInfo_local = new VerifyInfo();
+        if (user.getLoginEmail()!=null && !"".equals(user.getLoginEmail().trim())){
+            verifyInfo_local.setVerifyEmail(user.getLoginEmail());
+        }else if(user.getLoginPhoneNo()!=null&&!"".equals(user.getLoginPhoneNo().trim())){
+            verifyInfo_local.setVerifyPhoneNo(user.getLoginPhoneNo());
+        }else{
+            responseData.setFlag(false);
+            responseData.setMessage("无法获取邮箱地址或电话号码");
+            return responseData;
+        }
         verifyInfo_local.setVerifyCode(verifyCode);
         verifyInfo_local.setVerifyType("01");
         VerifyInfo verifyInfo_server = verifyCodeService.queryAllByConditions(verifyInfo_local);

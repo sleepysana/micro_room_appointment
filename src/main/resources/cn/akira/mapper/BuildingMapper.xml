@@ -1,83 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.akira.mapper.BuildingMapper">
-  <resultMap id="BaseResultMap" type="cn.akira.pojo.Building">
-    <!--@mbg.generated-->
-    <!--@Table T_BUILDING-->
-    <id column="BUILDING_ID" jdbcType="INTEGER" property="buildingId" />
-    <result column="BUILDING_NAME" jdbcType="VARCHAR" property="buildingName" />
-    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    BUILDING_ID, BUILDING_NAME, ADDRESS
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    <!--@mbg.generated-->
-    select 
-    <include refid="Base_Column_List" />
-    from T_BUILDING
-    where BUILDING_ID = #{buildingId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    <!--@mbg.generated-->
-    delete from T_BUILDING
-    where BUILDING_ID = #{buildingId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="cn.akira.pojo.Building">
-    <!--@mbg.generated-->
-    insert into T_BUILDING (BUILDING_ID, BUILDING_NAME, ADDRESS
-      )
-    values (#{buildingId,jdbcType=INTEGER}, #{buildingName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="cn.akira.pojo.Building">
-    <!--@mbg.generated-->
-    insert into T_BUILDING
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="buildingId != null">
-        BUILDING_ID,
-      </if>
-      <if test="buildingName != null">
-        BUILDING_NAME,
-      </if>
-      <if test="address != null">
-        ADDRESS,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="buildingId != null">
-        #{buildingId,jdbcType=INTEGER},
-      </if>
-      <if test="buildingName != null">
-        #{buildingName,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null">
-        #{address,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.akira.pojo.Building">
-    <!--@mbg.generated-->
-    update T_BUILDING
-    <set>
-      <if test="buildingName != null">
-        BUILDING_NAME = #{buildingName,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null">
-        ADDRESS = #{address,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where BUILDING_ID = #{buildingId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="cn.akira.pojo.Building">
-    <!--@mbg.generated-->
-    update T_BUILDING
-    set BUILDING_NAME = #{buildingName,jdbcType=VARCHAR},
-      ADDRESS = #{address,jdbcType=VARCHAR}
-    where BUILDING_ID = #{buildingId,jdbcType=INTEGER}
-  </update>
-  <select id="queryByPrimaryKey" resultMap="BaseResultMap">
-    SELECT * FROM T_BUILDING WHERE BUILDING_ID = #{buildingId}
-  </select>
+    <resultMap id="BaseResultMap" type="cn.akira.pojo.Building">
+        <!--@mbg.generated-->
+        <!--@Table T_BUILDING-->
+        <id column="BUILDING_ID" jdbcType="INTEGER" property="buildingId"/>
+        <result column="BUILDING_NAME" jdbcType="VARCHAR" property="buildingName"/>
+        <result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        BUILDING_ID, BUILDING_NAME, ADDRESS
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from T_BUILDING
+        where BUILDING_ID = #{buildingId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        <!--@mbg.generated-->
+        delete from T_BUILDING
+        where BUILDING_ID = #{buildingId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="cn.akira.pojo.Building">
+        <!--@mbg.generated-->
+        insert into T_BUILDING (BUILDING_ID, BUILDING_NAME, ADDRESS
+        )
+        values (#{buildingId,jdbcType=INTEGER}, #{buildingName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="cn.akira.pojo.Building">
+        <!--@mbg.generated-->
+        insert into T_BUILDING
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="buildingId != null">
+                BUILDING_ID,
+            </if>
+            <if test="buildingName != null">
+                BUILDING_NAME,
+            </if>
+            <if test="address != null">
+                ADDRESS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="buildingId != null">
+                #{buildingId,jdbcType=INTEGER},
+            </if>
+            <if test="buildingName != null">
+                #{buildingName,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.akira.pojo.Building">
+        <!--@mbg.generated-->
+        update T_BUILDING
+        <set>
+            <if test="buildingName != null">
+                BUILDING_NAME = #{buildingName,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                ADDRESS = #{address,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where BUILDING_ID = #{buildingId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.akira.pojo.Building">
+        <!--@mbg.generated-->
+        update T_BUILDING
+        set BUILDING_NAME = #{buildingName,jdbcType=VARCHAR},
+        ADDRESS = #{address,jdbcType=VARCHAR}
+        where BUILDING_ID = #{buildingId,jdbcType=INTEGER}
+    </update>
+    <select id="queryByPrimaryKey" resultMap="BaseResultMap">
+        SELECT *
+        FROM T_BUILDING
+        WHERE BUILDING_ID = #{buildingId}
+    </select>
+    <select id="queryAllIdAndName" resultMap="BaseResultMap">
+        SELECT BUILDING_ID, building_name
+        FROM T_BUILDING
+    </select>
 </mapper>

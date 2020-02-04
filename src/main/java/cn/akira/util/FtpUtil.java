@@ -6,6 +6,7 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,6 +38,7 @@ public class FtpUtil {
         ftpClient.login(username, password);//登录ftp
         if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {//是否连接成功,成功true,失败false
             ftpClient.changeWorkingDirectory(dirPath);//找到指定目录
+            ftpClient.enterLocalPassiveMode();
             InputStream inputStream = ftpClient.retrieveFileStream(fileName);//根据目录获取指定文件
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             String line;
@@ -48,7 +50,7 @@ public class FtpUtil {
         } else throw new IOException("ftp连接失败");
     }
 
-    public static String getUserIconBase64(User user) throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+    public static String getUserIconBase64(User user) throws SAXException, ParserConfigurationException, XPathExpressionException, IOException, TransformerException {
         String headIconBase64;
         if (user.getHdFileName() != null) {//如果用户设置过头像
             Map<String, Object> ftpMap = ConfigUtil.getHeadIconFtpInfo(); //用户头像的FTP信息

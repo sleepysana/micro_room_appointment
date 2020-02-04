@@ -18,4 +18,9 @@ public class RoomServiceImpl implements RoomService {
     public List<Room> queryAll() {
        return roomMapper.queryAll();
     }
+
+    @Override
+    public List<Room> queryByConditions(Room room) {
+        return roomMapper.queryByConditions(room);
+    }
 }

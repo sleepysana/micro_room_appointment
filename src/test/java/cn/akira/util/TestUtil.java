@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class TestUtil {
     }
 
     @Test
-    public void readConfigFileTest() throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+    public void readConfigFileTest() throws XPathExpressionException, ParserConfigurationException, SAXException, IOException, TransformerException {
         String configTagValue = ConfigUtil.getConfigTagValue("headIconFtp", "hostname");
         System.out.println(configTagValue);
     }

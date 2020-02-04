@@ -89,7 +89,6 @@
         <!-- 底部固定区域 -->
         @akira
     </div>
-    t
 </div>
 
 <%--suppress ES6ConvertVarToLetConst, JSUnresolvedVariable --%>

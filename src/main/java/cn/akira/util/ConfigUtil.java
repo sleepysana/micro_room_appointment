@@ -1,6 +1,7 @@
 package cn.akira.util;
 
 import cn.akira.pojo.User;
+import org.apache.ibatis.jdbc.Null;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
@@ -10,6 +11,7 @@ import org.xml.sax.SAXParseException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -60,21 +62,19 @@ public class ConfigUtil {
             XPathFactory xpathFactory = XPathFactory.newInstance();
             xpath = xpathFactory.newXPath();
         }
-
-        NodeList nodes_value = (NodeList) xpath
-                .evaluate(
-                        "//config[@id='" + configId + "']/property[@name='" + propertyName + "']/@value",
-                        doc,
-                        XPathConstants.NODESET
-                );
-        NodeList nodes_text = (NodeList) xpath
-                .evaluate(
-                        "//config[@id='" + configId + "']/property[@name='" + propertyName + "']/text()",
-                        doc,
-                        XPathConstants.NODESET
-                );
+        Map<String, NodeList> nodeListMap = getNodes(configId, propertyName);
+        NodeList nodes_text = nodeListMap.get("nodes_text");
+        NodeList nodes_value = nodeListMap.get("nodes_value");
         NodeList nodes = nodes_text;
-        int nodesLength = nodes.getLength();
+        int nodesLength;
+        try{
+            nodesLength = nodes.getLength();
+        }catch (NullPointerException e){
+            System.err.println("我也不知道这个异常是怎么回事，有时候会出现有时候又不会出现。应该是什么东西没关闭导致的，\n" +
+                    "也有可能是extra-config.xml或者getNodes里面的表达式没写对，反正目前还搞不清楚。");
+            return getConfigTagValue(configId, propertyName);
+        }
+
         nodes = nodesLength > 0 ? nodes_text : nodes_value;
         nodesLength = nodes.getLength();//重新再赋值一遍
         if (nodesLength < 1) {
@@ -90,7 +90,30 @@ public class ConfigUtil {
         return nodeValue;
     }
 
-    public static Map<String, String> getRsaKeys() throws XPathExpressionException, IOException, SAXException, ParserConfigurationException {
+    private static Map<String, NodeList> getNodes(String configId, String propertyName) {
+        Map<String, NodeList> nodesMap = new HashMap<>();
+        try {
+            NodeList nodes_value = (NodeList) xpath
+                    .evaluate(
+                            "//config[@id='" + configId + "']/property[@name='" + propertyName + "']/@value",
+                            doc,
+                            XPathConstants.NODESET
+                    );
+            NodeList nodes_text = (NodeList) xpath
+                    .evaluate(
+                            "//config[@id='" + configId + "']/property[@name='" + propertyName + "']/text()",
+                            doc,
+                            XPathConstants.NODESET
+                    );
+            nodesMap.put("nodes_value", nodes_value);
+            nodesMap.put("nodes_text", nodes_text);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        return nodesMap;
+    }
+
+    public static Map<String, String> getRsaKeys() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
         Map<String, String> rsaKeysMap = new HashMap<>();
         String configId = "rsa";
         String publicKey = "publicKey";
@@ -100,11 +123,11 @@ public class ConfigUtil {
         return rsaKeysMap;
     }
 
-    public static String getRsaPublicKey() throws XPathExpressionException, IOException, SAXException, ParserConfigurationException {
+    public static String getRsaPublicKey() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
         return getRsaKeys().get("publicKey");
     }
 
-    public static String getRsaPrivateKey() throws XPathExpressionException, IOException, SAXException, ParserConfigurationException {
+    public static String getRsaPrivateKey() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
         return getRsaKeys().get("privateKey");
     }
 
@@ -119,6 +142,7 @@ public class ConfigUtil {
         rsaKeysMap.put(port, Integer.valueOf(getConfigTagValue(configId, port)));
         rsaKeysMap.put(username, getConfigTagValue(configId, username));
         rsaKeysMap.put(password, getConfigTagValue(configId, password));
+
         return rsaKeysMap;
     }
 
@@ -126,15 +150,15 @@ public class ConfigUtil {
         return (String) getHeadIconFtpInfo().get("hostname");
     }
 
-    public static int getHeadIconFtpPort() throws XPathExpressionException, IOException, SAXException, ParserConfigurationException {
+    public static int getHeadIconFtpPort() throws XPathExpressionException, IOException, SAXException, ParserConfigurationException, TransformerException {
         return (int) getHeadIconFtpInfo().get("port");
     }
 
-    public static String getHeadIconFtpUsername() throws XPathExpressionException, IOException, SAXException, ParserConfigurationException {
+    public static String getHeadIconFtpUsername() throws XPathExpressionException, IOException, SAXException, ParserConfigurationException, TransformerException {
         return (String) getHeadIconFtpInfo().get("username");
     }
 
-    public static String getHeadIconFtpPassword() throws XPathExpressionException, IOException, SAXException, ParserConfigurationException {
+    public static String getHeadIconFtpPassword() throws XPathExpressionException, IOException, SAXException, ParserConfigurationException, TransformerException {
         return (String) getHeadIconFtpInfo().get("password");
     }
 }

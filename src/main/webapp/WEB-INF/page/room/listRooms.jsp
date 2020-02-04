@@ -17,13 +17,19 @@
         <div class="layui-inline">
             <label class="layui-form-label">教室编号</label>
             <div class="layui-input-inline">
-                <input type="number" id="phone" class="layui-input">
+                <input type="number" id="roomId_q" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">房间类型</label>
             <div class="layui-input-inline">
-                <select name="roomType" id="roomType" lay-search></select>
+                <select name="roomType" id="roomType" lay-filter="roomType"></select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">教学楼</label>
+            <div class="layui-input-inline">
+                <select name="buildings" id="buildings" lay-filter="buildings"></select>
             </div>
         </div>
     </div>
@@ -39,78 +45,37 @@
 <script src="${path}/static/js/layui/layui.js"></script>
 <%--suppress JSUnfilteredForInLoop --%>
 <script type="text/javascript">
-    var fatherOrMother = parent;
-    var TABLE_INS;
+    let fatherOrMother = parent;
+    let select_html_init = '<option value="" selected></option>';
+    let select_html_1, select_html_2;
+    let tableData;
+    let TABLE_INS;
+    let layer;
+    let form;
+    let table;
+
+    function getValue(elementId) {
+        return $('#' + elementId).val();
+    }
 
     layui.use(['form', 'table', 'layer'], function () {
-
-        var table = layui.table,
-            form = layui.form,
-            layer = layui.layer;
-        // var layer = layui.layer;
-
+        let _table = layui.table,
+            _form = layui.form,
+            _layer = layui.layer;
+        layer = _layer;
+        form = _form;
+        table = _table;
         /**
          * 表格参数配置开始
          */
-        var tableIns = table.render({
-            id: 'roomListData',
-            even: true,
-            width: "auto",
-            skin: "row",
-            elem: '#roomList',
-            method: "POST",
-            toolbar: 'default',
-            loading: true,
-            height: 'full-58',
-            url: '${path}/room/listRooms', //数据接口
-            page: true,  //开启分页
-            parseData: function (data) {
-                console.log("表数据:", data);
-                return {
-                    "code": data.status,
-                    "msg": data.message,
-                    "count": data.customProp,
-                    "data": data.resource
-                };
-            },
-            cols: [[ //表头
-                {field: 'chk', type: 'checkbox', fixed: 'left'},
-                {field: 'roomId', title: '房间编号', width: 120, sort: true, fixed: 'left'},
-                {field: 'roomName', title: '房间名', width: 400},
-                {field: 'roomType', title: '房间类型', width: 300, sort: true},
-                {field: 'seats', title: '座位数', width: 120},
-                {
-                    field: 'building.buildingName',
-                    title: '所属教学楼',
-                    templet: '<div>{{d.building.buildingName}}</div>',
-                    width: 190
-                },
-                {field: 'roomState', title: '能否预约', width: 130},
-                {field: 'lockReason', title: '不能预约原因', width: 400},
-                {
-                    field: 'operation', title: '操作', fixed: 'right',
-                    templet: '<div><div class="layui-btn-group">' +
-                        '  <button type="button" class="layui-btn layui-btn-xs id{{d.id}}" onclick="showEditUser({{d.id}})">' +
-                        '    <i class="layui-icon">&#xe642;</i>' +
-                        '  </button>' +
-                        '  <button type="button" class="layui-btn layui-btn-xs layui-btn-danger id{{d.id}}" onclick="deleteUser({{d.id}})">' +
-                        '    <i class="layui-icon">&#xe640;</i>' +
-                        '</div></div>',
-                    width: 85
-                }
-            ]], done: function () {
-                console.log("渲染完成回调");
-                $(".id1").hide();
-                $(".id2").hide();
-            }
-        });
+        var tableIns = _table.render(getTableRender());
         TABLE_INS = tableIns;
         // console.log("表格参数: ", tableIns);
 
         //监听表格复选框点击
-        table.on('checkbox(roomListLayFilter)', function (data) {
+        _table.on('checkbox(roomListLayFilter)', function (data) {
             console.log("单行数据(这是单击该行时获取到的该行的数据):", data); //这是单击该行时获取到的该行的数据
-            console.log("所有行数据", table.checkStatus('roomListData'));
+            console.log("所有行数据", _table.checkStatus('roomListData'));
         });
 
         /**
@@ -119,18 +84,18 @@
          */
         var $ = layui.$, active = {
             getCheckData: function () { //获取选中数据
-                var checkStatus = table.checkStatus('roomListData'),
+                var checkStatus = _table.checkStatus('roomListData'),
                     data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                _layer.alert(JSON.stringify(data));
             },
             getCheckLength: function () { //获取选中数目
-                var checkStatus = table.checkStatus('roomListData'),
+                var checkStatus = _table.checkStatus('roomListData'),
                     data = checkStatus.data;
-                layer.msg('选中了：' + data.length + ' 个');
+                _layer.msg('选中了：' + data.length + ' 个');
             },
             isAll: function () { //验证是否全选
-                var checkStatus = table.checkStatus('roomListData');
-                layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                var checkStatus = _table.checkStatus('roomListData');
+                _layer.msg(checkStatus.isAll ? '全选' : '未全选')
             }
         };
         //点击事件参数配置
@@ -142,7 +107,7 @@
         /**
          * 工具栏监听
          */
-        table.on('toolbar(roomListLayFilter)', function (data) {
+        _table.on('toolbar(roomListLayFilter)', function (data) {
             switch (data.event) {
                 case 'add':
                     parent.layer.open({
@@ -160,13 +125,13 @@
                     });
                     break;
                 case 'update':
-                    layer.alert("编辑");
+                    _layer.alert("编辑");
                     break;
                 case 'delete':
                     var msg = '你没有选择任何数据';
-                    var selectedData = table.checkStatus("roomListData").data;
+                    var selectedData = _table.checkStatus("roomListData").data;
                     if (selectedData.length < 1) {
-                        layer.alert(msg);
+                        _layer.alert(msg);
                         return;
                     } else if (selectedData.length === 1) {
                         msg = '确定要删除这条数据蛮?';
@@ -177,12 +142,12 @@
                     for (var i = 0; i < selectedData.length; i++) {
                         ids[i] = selectedData[i].id
                     }
-                    layer.confirm(msg, {
+                    _layer.confirm(msg, {
                             btn: ['当然', '再考虑'] //可以无限个按钮
                         },
                         function (index) {
-                            layer.close(index);
-                            layer.load(1);
+                            _layer.close(index);
+                            _layer.load(1);
                             $.ajax({
                                 type: "post",
                                 url: "${path}/user/deleteUsers",
@@ -190,48 +155,98 @@
                                 dataType: "json",
                                 success: function (data) {
                                     if (data.flag) {
-                                        layer.close(layer.index);
-                                        layer.alert(data.message, {
+                                        _layer.close(_layer.index);
+                                        _layer.alert(data.message, {
                                             yes: function () {
                                                 tableIns.reload();
-                                                layer.close(layer.index);
+                                                _layer.close(_layer.index);
                                             }
                                         });
                                     } else {
-                                        layer.close(layer.index);
-                                        layer.alert(data.message);
+                                        _layer.close(_layer.index);
+                                        _layer.alert(data.message);
                                     }
                                 }, error: function (e) {
                                     console.log(e);
-                                    layer.close(layer.index);
-                                    layer.alert("请求失败了");
+                                    _layer.close(_layer.index);
+                                    _layer.alert("请求失败了");
                                 }
                             });
                         },
                         function (index) {
-                            layer.close(index);
+                            _layer.close(index);
                         });
                     break;
             }
         });
 
+        //获取查询条件的选择框数据
         $.ajax({
-            url: '${path}/room/getRoomTypeSelectList',
+            url: '${path}/room/getSelectList',
             type: "post",
             dataType: "json",
             contentType: "application/json",
             async: false,//这得注意是同步
             success: function (result) {
-                let html = '<option value="" selected></option>';
+                select_html_1 = select_html_init;
+                select_html_2 = select_html_init;
                 let resultData = result.resource;
-                for (let data in resultData) {
-                     html += '<option value = "' + resultData[data].attributeKey + '">' + resultData[data].attributeValue + '</option>'
+                for (let data in resultData.roomTypes) {
+                    select_html_1 += '<option value = "' + resultData.roomTypes[data].attributeKey + '">' + resultData.roomTypes[data].attributeValue + '</option>'
                 }
-                $("#roomType").html(html);
+                for (let data in resultData.buildings) {
+                    select_html_2 += '<option value = "' + resultData.buildings[data].buildingId + '">' + resultData.buildings[data].buildingName + '</option>'
+                }
+                $("#roomType").html(select_html_1);
+                $("#buildings").html(select_html_2);
             }
         });
-        form.render('select');//需要渲染一下
+        _form.render('select');//需要渲染一下
+
+        _form.on('select(roomType)', function () {
+            queryByChoises();
+        });
+        _form.on('select(buildings)', function () {
+            queryByChoises();
+        });
     });
+
+    $("#roomId_q").keyup(function () {
+        queryByRoomId($("#roomId_q"));
+    });
+    $("#roomId_q").change(function () {
+        queryByRoomId($("#roomId_q"));
+    });
+
+    function queryByChoises() {
+        let roomType = $("#roomType").val();
+        let buildingId = $("#buildings").val();
+        if (roomType !== '' && roomType !== undefined && roomType !== null) {
+            table.render(getTableRender());
+            $("#roomId_q").val('');
+        } else if (buildingId !== '' && buildingId !== undefined && buildingId !== null) {
+            table.render(getTableRender());
+        } else return false;
+    }
+
+
+    function queryByRoomId(_this) {
+        if (_this.val().length < 4) {
+            $("#roomType").removeAttr('disabled');
+            $("#buildings").removeAttr('disabled');
+            select_html_init = '<option value="" selected>教室编号查询...</option>';
+            $("#roomType").html(select_html_1);
+            $("#buildings").html(select_html_2);
+            form.render('select');
+        } else if (_this.val().length >= 4) {
+            $("#roomType").attr('disabled', 'disabled');
+            $("#buildings").attr('disabled', 'disabled');
+            $("#roomType").html(select_html_init);
+            $("#buildings").html(select_html_init);
+            form.render('select');
+            table.render(getTableRender());
+        }
+    }
 
     function showEditUser(id) {
         parent.layer.open({
@@ -298,6 +313,68 @@
         //提交数据
         temp_form.submit();
     }
+
+    function getTableRender() {
+        return {
+            id: 'roomListData',
+            url: '${path}/room/queryRooms', //数据接口
+            method: "POST",
+            where: {
+                'roomId': getValue('roomId_q'),
+                'roomType': getValue('roomType'),
+                'buildingId': getValue('buildings')
+            },
+            even: true,
+            width: "auto",
+            skin: "row",
+            elem: '#roomList',
+            toolbar: 'default',
+            loading: true,
+            height: 'full-58',
+            page: true,  //开启分页
+            parseData: function (data) {
+                tableData = data;
+                console.log("表数据:", tableData);
+                return {
+                    "code": tableData.status,
+                    "msg": tableData.message,
+                    "count": tableData.customProp,
+                    "data": tableData.resource
+                };
+            },
+            cols: [[ //表头
+                {field: 'chk', type: 'checkbox', fixed: 'left'},
+                {field: 'roomId', title: '房间编号', width: 120, sort: true, fixed: 'left'},
+                {field: 'roomName', title: '房间名', width: 400},
+                {field: 'roomType', title: '房间类型', width: 300, sort: true},
+                {field: 'seats', title: '座位数', width: 120},
+                {
+                    field: 'building.buildingName',
+                    title: '所属教学楼',
+                    templet: '<div>{{d.building.buildingName}}</div>',
+                    width: 190
+                },
+                {field: 'roomState', title: '能否预约', width: 130},
+                {field: 'lockReason', title: '不能预约原因', width: 400},
+                {
+                    field: 'operation', title: '操作', fixed: 'right',
+                    templet: '<div><div class="layui-btn-group">' +
+                        '  <button type="button" class="layui-btn layui-btn-xs id{{d.id}}" onclick="showEditUser({{d.id}})">' +
+                        '    <i class="layui-icon">&#xe642;</i>' +
+                        '  </button>' +
+                        '  <button type="button" class="layui-btn layui-btn-xs layui-btn-danger id{{d.id}}" onclick="deleteUser({{d.id}})">' +
+                        '    <i class="layui-icon">&#xe640;</i>' +
+                        '</div></div>',
+                    width: 85
+                }
+            ]], done: function () {
+                console.log("渲染完成回调");
+                $(".id1").hide();
+                $(".id2").hide();
+            }
+        };
+    }
+
 </script>
 </body>
 </html>

@@ -9,6 +9,8 @@ import java.util.List;
 public interface RoomMapper {
     List<Room> queryAll();
 
+    List<Room> queryByConditions(Room room);
+
     int deleteByPrimaryKey(Integer roomId);
 
     int insert(Room record);

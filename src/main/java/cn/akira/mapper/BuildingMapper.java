@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Mapper
 public interface BuildingMapper {
@@ -21,4 +22,6 @@ public interface BuildingMapper {
     int updateByPrimaryKey(Building record);
 
     Building queryByPrimaryKey(@Param("buildingId") int buildingId);
+
+    List<Building> queryAllIdAndName();
 }

@@ -11,8 +11,8 @@
     <!--用户头像的ftp配置-->
     <config id="headIconFtp">
         <property name="hostname" value="45.40.197.212"/>
-        <property name="port" value="22"/>
-        <property name="username" value="ftp_mra_hd"/>
+        <property name="port" value="21"/>
+        <property name="username" value="ftp_test"/>
         <property name="password" value="123"/>
     </config>
 
