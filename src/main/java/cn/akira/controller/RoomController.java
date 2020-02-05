@@ -94,10 +94,9 @@ public class RoomController {
             roomUse.setEndDate(endDate);
             User sessionUser = (User) session.getAttribute("SESSION_USER");
             roomUse.setApplyUserId(sessionUser.getUserId());
-            roomUse.setApplyReason("测试");//todo 这个以后改
             roomUse.setApproveState("-1");
             roomUseService.insert(roomUse);
-            responseData.setMessage("成功");
+            responseData.setMessage("申请已提交, 待管理员阅后审核结果将会下发到您的邮箱，请留意");
         } catch (ParseException e) {
             responseData.setFlag(false);
             responseData.setMessage("日期格式不正确");

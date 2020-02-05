@@ -270,7 +270,7 @@
             scrollbar: false,
             title: '预约教室: ' + roomId,
             closeBtn: 1,
-            area: ['1000px', '620px'],
+            area: ['785px', '500px'],
             content: '${path}/room/showApplyUse/' + roomId,
             end: function () {
                 layui.table.reload("roomListData");
@@ -312,7 +312,7 @@
             width: "auto",
             skin: "row",
             elem: '#roomList',
-            toolbar: 'default',
+            // toolbar: 'default',
             loading: true,
             height: 'full-58',
             page: true,  //开启分页
@@ -327,7 +327,7 @@
                 };
             },
             cols: [[ //表头
-                {field: 'chk', type: 'checkbox', fixed: 'left'},
+                // {field: 'chk', type: 'checkbox', fixed: 'left'},
                 {field: 'roomId', title: '房间编号', width: 120, sort: true, fixed: 'left'},
                 {field: 'roomName', title: '房间名', width: 400},
                 {field: 'roomType', title: '房间类型', width: 300, sort: true},
@@ -340,9 +340,10 @@
                 },
                 {field: 'roomState', title: '能否预约', width: 130},
                 {field: 'lockReason', title: '不能预约原因', width: 400},
+
                 {
                     field: 'operation', title: '操作', fixed: 'right',
-                    templet: '<div><div class="layui-btn-group">' +
+                    templet: ' <div><div class="layui-btn-group">' +
                         '  <button type="button" class="layui-btn layui-btn-xs id{{d.id}}" onclick="showUseInfo({{d.roomId}})">' +
                         '    <i class="layui-icon">&#xe615;</i>' +
                         '  </button>' +

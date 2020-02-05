@@ -113,6 +113,7 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
             responseData.setExceptionInfo(e);
+            responseData.setMessage(e.getMessage());
         }
         return responseData;
     }
