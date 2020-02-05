@@ -5,6 +5,7 @@ import cn.akira.pojo.User;
 import cn.akira.pojo.VerifyInfo;
 import cn.akira.service.UserService;
 import cn.akira.service.VerifyInfoService;
+import cn.akira.util.NetUtil;
 import cn.akira.util.RsaUtil;
 import cn.akira.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class RegisterController {
         verifyCodeService.insertVerifyInfo(verifyInfo);
         String content = "感谢您注册成为本站用户，【" + vrfCode + "】是您本次邮箱注册的验证码 :) " +
                 "\n如您不知道这封邮件是怎么回事，您大可忽略并删除它。";
-        ValidateUtil.sendVerifyEmail(email, loginName + " 敬启：", content);
+        NetUtil.sendEmail(email, loginName + " 敬启：", content);
         return responseData;
     }
 

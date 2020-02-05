@@ -5,7 +5,7 @@
 <c:set value="${pageContext.request.contextPath}" var="path" scope="page"/>
 <html>
 <head>
-    <title>编辑用户</title>
+    <title>填写预约信息</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="${path}/static/css/layui/layui.css">
     <style type="text/css">
@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <div class="layui-form-item" style="text-align: center;bottom: 4px;width: 608px;position: fixed;">
+    <div class="layui-form-item" style="text-align: center;bottom: 11px;width: 608px;position: fixed;">
         <div class="layui-input-block" style="margin: auto">
             <button type="button" class="layui-btn" id="submit" style="height: 43px;width: 100px;font-size: 18px;">
                 提交
@@ -83,11 +83,6 @@
                 value = value.replace(/-/g, '');
                 let now = getDateFormat('2');
                 let oneWeekLater = getDateFormat('2', 7);
-                console.log('value --', value);
-                console.log('value is \'\'?', value === '');
-                console.log('now --', now);
-                console.log('oneWeekLater --', oneWeekLater);
-                console.log('dateTime -- ', getDateFormat('1', 0, '-', ':'));
                 if (value !== '' && value !== null && value !== undefined
                     && parseInt(value) >= parseInt(now)
                     && parseInt(value) <= parseInt(oneWeekLater)
@@ -123,9 +118,6 @@
                 }
             }
         });
-
-        // layer.alert(getDateFormat('1'));
-        // layer.alert(getDateFormat('1'));
     });
 
     $('#submit').click(function () {
@@ -135,11 +127,20 @@
         let startTime = startDate + ' ' + time1 + ':00';
         let endTime = startDate + ' ' + time2 + ':00';
         let applyReason = $('#applyReason').val();
-        if (parseInt(startTime.replace(/-|\s+|:/g, '')) < parseInt(getDateFormat('1'))) {
+        if (startDate === undefined || startDate.replace(/\s+/g, '') === '') {
+            layer.alert('请完善预约时间信息');
+            return false;
+        } else if (time1 === undefined || time1.replace(/\s+/g, '') === '') {
+            layer.alert('请填写开始时间');
+            return false;
+        } else if (time2 === undefined || time2.replace(/\s+/g, '') === '') {
+            layer.alert('请填写结束时间');
+            return false;
+        } else if (parseInt(startTime.replace(/-|\s+|:/g, '')) < parseInt(getDateFormat('1'))) {
             layer.alert('开始预约时间不应早于现在');
             return false;
         } else if (timeDifference(time1, time2) < 0) {
-            layer.alert("结束时间不可早于开始时间");
+            layer.alert("结束时间不应早于开始时间");
             return false;
         } else if (timeDifference(time1, time2) < 15) {
             layer.alert("教室使用时间不应低于15分钟");
@@ -147,19 +148,19 @@
         } else if (timeDifference(time1, time2) > 180) {
             layer.alert("使用时间过长，请控制在3小时以内");
             return false;
-        } else if (applyReason === null || applyReason === undefined || applyReason.replace(/\s+/g, '') === '') {
+        } else if (applyReason === undefined || applyReason.replace(/\s+/g, '') === '') {
             layer.alert('请填写申请原因(用途)');
-            return  false;
+            return false;
         }
         $.ajax({
             type: 'POST',
-            url: '${path}/room/applyUse',
+            url: '${path}/room/approve',
             contentType: 'application/x-www-form-urlencoded;charset=utf-8',
             data: {
                 'roomId': $('#roomId').val(),
                 'startTime': startTime,
                 'endTime': endTime,
-                'applyReason':applyReason
+                'applyReason': applyReason
             },
             dataType: 'json',
             success: function (data) {
@@ -167,7 +168,6 @@
             }
         })
     });
-
 
     //计算时间差（相差分钟）
     function timeDifference(startTime, endTime) {
@@ -178,7 +178,6 @@
         let endAll = parseInt(end1[0] * 60) + parseInt(end1[1]);
         return endAll - startAll;
     }
-
 
     function getDateFormat(formatType, days, sep1, sep2) {
         let date = new Date();

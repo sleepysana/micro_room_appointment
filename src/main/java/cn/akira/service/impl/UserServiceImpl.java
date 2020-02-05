@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(User user) throws Exception {
-        return null;
+        return this.getUserSessionCols(user);
     }
 
     @Override

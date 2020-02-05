@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--suppress ALL -->
 <mapper namespace="cn.akira.mapper.RoomUseMapper">
     <resultMap id="BaseResultMap" type="cn.akira.pojo.RoomUse">
         <!--@mbg.generated-->
         <!--@Table T_ROOM_USE-->
-
+        <id column="APP_SEQ" jdbcType="INTEGER" property="appSeq"/>
         <result column="ROOM_ID" jdbcType="INTEGER" property="roomId"/>
         <result column="APPLY_USER_ID" jdbcType="INTEGER" property="applyUserId"/>
         <result column="APPLY_DATE" jdbcType="TIMESTAMP" property="applyDate"/>
@@ -15,7 +16,32 @@
         <result column="APPROVE_DATE" jdbcType="TIMESTAMP" property="approveDate"/>
         <result column="APPROVE_USER_ID" jdbcType="INTEGER" property="approveUserId"/>
         <result column="REJECT_REASON" jdbcType="CLOB" property="rejectReason"/>
-        <result column="APP_SEQ" jdbcType="INTEGER" property="appSeq"/>
+        <collection property="applyUserInfo" ofType="cn.akira.pojo.User">
+            <id column="USER_ID" jdbcType="INTEGER" property="userId"/>
+            <result column="login_name" jdbcType="VARCHAR" property="loginName"/>
+            <result column="login_email" jdbcType="VARCHAR" property="loginEmail"/>
+            <result column="login_phone_no" jdbcType="VARCHAR" property="loginPhoneNo"/>
+            <result column="rsa_password" jdbcType="VARCHAR" property="rsaPassword"/>
+            <result column="user_role" jdbcType="VARCHAR" property="userRole"/>
+            <result column="user_state" jdbcType="VARCHAR" property="userState"/>
+            <result column="gender" jdbcType="VARCHAR" property="gender"/>
+            <result column="birthday" jdbcType="TIMESTAMP" property="birthday"/>
+            <result column="addr" jdbcType="VARCHAR" property="addr"/>
+            <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+            <result column="cid" jdbcType="VARCHAR" property="cid"/>
+            <result column="cid_type" jdbcType="VARCHAR" property="cidType"/>
+            <result column="reg_date" jdbcType="DATE" property="regDate"/>
+            <result column="hd_file_name" jdbcType="VARCHAR" property="hdFileName"/>
+        </collection>
+        <collection property="roomInfo" ofType="cn.akira.pojo.Room">
+            <id column="ROOM_ID" jdbcType="INTEGER" property="roomId"/>
+            <result column="ROOM_NAME" jdbcType="VARCHAR" property="roomName"/>
+            <result column="ROOM_TYPE" jdbcType="VARCHAR" property="roomType"/>
+            <result column="SEATS" jdbcType="INTEGER" property="seats"/>
+            <result column="BUILDING_ID" jdbcType="INTEGER" property="buildingId"/>
+            <result column="ROOM_STATE" jdbcType="VARCHAR" property="roomState"/>
+            <result column="LOCK_REASON" jdbcType="VARCHAR" property="lockReason"/>
+        </collection>
     </resultMap>
     <insert id="insert" parameterType="cn.akira.pojo.RoomUse">
         <!--@mbg.generated-->
@@ -26,10 +52,10 @@
         APPLY_REASON,
         START_DATE,
         END_DATE,
-
         APPROVE_STATE,
         APP_SEQ)
-        values (#{roomId,jdbcType=INTEGER},
+        values (
+        #{roomId,jdbcType=INTEGER},
         #{applyUserId,jdbcType=INTEGER},
         SYSDATE,
         #{applyReason,jdbcType=CLOB}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP},
@@ -104,4 +130,32 @@
             </if>
         </trim>
     </insert>
+    <select id="queryRoomUse" resultMap="BaseResultMap">
+        SELECT ru.APP_SEQ,
+        ru.ROOM_ID,
+        ru.START_DATE,
+        ru.END_DATE,
+        ru.APPLY_REASON,
+        ru.APPLY_USER_ID,
+        ru.APPLY_DATE,
+        ru.APPROVE_STATE,
+        ru.APPROVE_USER_ID,
+        ru.APPROVE_DATE,
+        ru.REJECT_REASON
+        FROM T_ROOM_USE ru
+        <where>
+            <if test="applyUserId != null">
+                AND ru.APPLY_USER_ID = #{applyUserId,jdbcType=INTEGER}
+            </if>
+        </where>
+        ORDER BY APP_SEQ DESC
+    </select>
+    <delete id="updateRoomUse">
+        UPDATE T_ROOM_USE
+        SET APPROVE_STATE    = #{approveState,jdbcType=VARCHAR},
+            APPROVE_USER_ID = #{approveUserId,jdbcType=INTEGER},
+            REJECT_REASON   = #{rejectReason,jdbcType=CLOB},
+            APPROVE_DATE=SYSDATE
+    WHERE APP_SEQ = #{appSeq,jdbcType=INTEGER}
+    </delete>
 </mapper>

@@ -57,9 +57,29 @@ public class RoomUse implements Serializable {
     /**
      * 预约流水号
      */
-    private Integer appSeq;
+    private long appSeq;
+
+    private User applyUserInfo;
+
+    private Room roomInfo;
 
     private static final long serialVersionUID = 1L;
+
+    public Room getRoomInfo() {
+        return roomInfo;
+    }
+
+    public void setRoomInfo(Room roomInfo) {
+        this.roomInfo = roomInfo;
+    }
+
+    public User getApplyUserInfo() {
+        return applyUserInfo;
+    }
+
+    public void setApplyUserInfo(User applyUserInfo) {
+        this.applyUserInfo = applyUserInfo;
+    }
 
     public Integer getRoomId() {
         return roomId;
@@ -141,11 +161,11 @@ public class RoomUse implements Serializable {
         this.rejectReason = rejectReason;
     }
 
-    public Integer getAppSeq() {
+    public long getAppSeq() {
         return appSeq;
     }
 
-    public void setAppSeq(Integer appSeq) {
+    public void setAppSeq(long appSeq) {
         this.appSeq = appSeq;
     }
 

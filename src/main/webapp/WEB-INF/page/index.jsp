@@ -22,7 +22,6 @@
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
-
     <div class="layui-header">
         <div class="layui-logo" id="mainTitle">教室预约管理系统</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
@@ -60,12 +59,19 @@
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item">
                     <a class="" href="javascript:;">教室</a>
+                    <c:if test="${SESSION_USER.userRole =='01'}">
                     <dl class="layui-nav-child">
-                        <c:if test="${SESSION_USER.userRole =='01'}">
-                            <dd><a href="javascript:;" onclick="iframeLocation('${path}/room/toRoomList')">
-                                教室预约
-                            </a></dd>
+                        <dd><a href="javascript:;" onclick="iframeLocation('${path}/room/toRoomList')">
+                            教室预约
+                        </a></dd>
                         </c:if>
+                        <c:if test="${SESSION_USER.userRole =='02'}">
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" onclick="iframeLocation('${path}/room/roomApplyMng')">
+                                教室预约管理
+                            </a></dd>
+                            </c:if>
+                        </dl>
                     </dl>
                 </li>
                 <%--<li class="layui-nav-item">
@@ -132,8 +138,6 @@
             layui.layer.close(i);
         });
     }
-
-
 </script>
 </body>
 </html>

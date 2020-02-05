@@ -1,10 +1,10 @@
 package cn.akira.controller;
 
 import cn.akira.pojo.*;
-import cn.akira.service.BuildingService;
-import cn.akira.service.ColCommService;
-import cn.akira.service.RoomService;
-import cn.akira.service.RoomUseService;
+import cn.akira.service.*;
+import cn.akira.thread.SendEmailThread;
+import cn.akira.util.CastUtil;
+import cn.akira.util.NetUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/room")
@@ -36,9 +39,17 @@ public class RoomController {
     @Autowired
     private RoomUseService roomUseService;
 
+    @Autowired
+    private UserService userService;
+
     @RequestMapping("/toRoomList")
     public String toAppointmentRoom() {
         return "/room/listRooms";
+    }
+
+    @RequestMapping("/roomApplyMng")
+    public String toRoomApplyMng() {
+        return "/room/roomApplyMng";
     }
 
     @RequestMapping("/queryRooms")
@@ -100,10 +111,68 @@ public class RoomController {
         } catch (ParseException e) {
             responseData.setFlag(false);
             responseData.setMessage("日期格式不正确");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             responseData.setExceptionInfo(e);
-            responseData.setMessage("遇到错误:"+e.getMessage());
+            responseData.setMessage("遇到错误:" + e.getMessage());
+        }
+        return responseData;
+    }
+
+    @RequestMapping("/queryRoomUses")
+    @ResponseBody
+    public ResponseData queryRoomUses(RoomUse requestedRoomUse) {
+        ResponseData responseData = new ResponseData();
+        try {
+            List<RoomUse> roomUses = roomUseService.queryRoomUse(requestedRoomUse);
+            responseData.setStatus(0);
+            responseData.setResource(roomUses);
+            responseData.setCustomProp(roomUses.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseData.setExceptionInfo(e);
+            responseData.setMessage(e.getMessage());
+        }
+        return responseData;
+    }
+
+    @RequestMapping("/roomUseApprove")
+    @ResponseBody
+    public ResponseData roomUseApprove(RoomUse roomUse, HttpSession session) {
+        ResponseData responseData = new ResponseData();
+        User sessionUser = (User) session.getAttribute("SESSION_USER");
+        try {
+            roomUse.setApproveUserId(sessionUser.getUserId());
+            roomUseService.updateRoomUse(roomUse);
+            RoomUse onlyHaveSeqRoomUse = new RoomUse();
+            onlyHaveSeqRoomUse.setAppSeq(roomUse.getAppSeq());
+            List<RoomUse> roomUses = roomUseService.queryRoomUse(onlyHaveSeqRoomUse);
+            User applyUser = new User();
+            applyUser.setUserId(roomUses.get(0).getApplyUserId());
+            String loginEmail = userService.getUser(applyUser).getLoginEmail();
+            String title = "预约结果通知", content, responseMessage;
+            if ("0".equals(roomUse.getApproveState())) {
+                roomUse.setRejectReason("长得丑"); //todo 这个以后改
+                content = "尊敬的用户，很遗憾的通知您，你在" + CastUtil.formatDate(roomUses.get(0).getApplyDate()) +
+                        "对" + roomUses.get(0).getRoomId() + "教室(预约使用时间段:" +
+                        CastUtil.formatDate(roomUses.get(0).getStartDate()) + " ~ " +
+                        CastUtil.formatDate(roomUses.get(0).getEndDate()) + ")的申请并未通过," +
+                        "原因：" + roomUses.get(0).getRejectReason();
+                responseMessage = "已拒绝";
+            } else {
+                content = "尊敬的用户，你在" + CastUtil.formatDate(roomUses.get(0).getApplyDate()) +
+                        "对" + roomUses.get(0).getRoomId() + "教室(预约使用时间段:" +
+                        CastUtil.formatDate(roomUses.get(0).getStartDate()) + " ~ " +
+                        CastUtil.formatDate(roomUses.get(0).getEndDate()) + ")的申请已通过审核,届时请务必到达该教室";
+                responseMessage = "已通过";
+            }
+            Thread sendEmailThread = new Thread(new SendEmailThread(loginEmail,title,content));
+            sendEmailThread.start();
+            responseData.setMessage(responseMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseData.setExceptionInfo(e);
+            responseData.setMessage(e.getMessage());
         }
         return responseData;
     }

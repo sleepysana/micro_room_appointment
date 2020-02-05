@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class RoomUseServiceImpl implements RoomUseService {
 
@@ -17,5 +19,15 @@ public class RoomUseServiceImpl implements RoomUseService {
     @Transactional
     public int insert(RoomUse record) {
         return roomUseMapper.insert(record);
+    }
+
+    @Override
+    public List<RoomUse> queryRoomUse(RoomUse record) throws Exception {
+        return roomUseMapper.queryRoomUse(record);
+    }
+
+    @Override
+    public int updateRoomUse(RoomUse record) throws Exception {
+        return roomUseMapper.updateRoomUse(record);
     }
 }

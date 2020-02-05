@@ -1,4 +1,4 @@
-<%--suppress HtmlUnknownAttribute,JSValidateJSDoc,JSUnresolvedVariable,SpellCheckingInspection --%>
+<%--suppress JSStringConcatenationToES6Template,JSUnresolvedVariable,BadExpressionStatementJS,HtmlUnknownAttribute,JSValidateJSDoc,JSUnresolvedVariable,SpellCheckingInspection --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set value="${pageContext.request.contextPath}" var="path" scope="page"/>
@@ -17,7 +17,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">教室编号</label>
             <div class="layui-input-inline">
-                <input type="number" id="roomId_q" class="layui-input">
+                <input type="number" id="userId" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
@@ -48,7 +48,6 @@
     let fatherOrMother = parent;
     let select_html_init = '<option value="" selected></option>';
     let select_html_1, select_html_2;
-    let tableData;
     let TABLE_INS;
     let layer;
     let form;
@@ -211,11 +210,11 @@
         });
     });
 
-    $("#roomId_q").keyup(function () {
-        queryByRoomId($("#roomId_q"));
+    $("#userId").keyup(function () {
+        queryByRoomId($("#userId"));
     });
-    $("#roomId_q").change(function () {
-        queryByRoomId($("#roomId_q"));
+    $("#userId").change(function () {
+        queryByRoomId($("#userId"));
     });
 
     function queryByChoises() {
@@ -223,7 +222,7 @@
         let buildingId = $("#buildings").val();
         if (roomType !== '' && roomType !== undefined && roomType !== null) {
             table.render(getTableRender());
-            $("#roomId_q").val('');
+            $("#userId").val('');
         } else if (buildingId !== '' && buildingId !== undefined && buildingId !== null) {
             table.render(getTableRender());
         } else return false;
@@ -263,19 +262,23 @@
         });
     }
 
-    function approve(roomId) {
-        parent.layer.open({
-            type: 2,
-            moveOut: true,
-            scrollbar: false,
-            title: '预约教室: ' + roomId,
-            closeBtn: 1,
-            area: ['785px', '510px'],
-            content: '${path}/room/showApplyUse/' + roomId,
-            end: function () {
-                layui.table.reload("roomListData");
+    function approve(appSeq, pass) {
+        $.ajax({
+            type: 'POST',
+            url: '${path}/room/roomUseApprove',
+            contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+            data: {
+                'appSeq': appSeq,
+                'approveState': pass
+            },
+            dataType: 'json',
+            success: function (data) {
+                layer.alert(data.message);
+            },
+            error: function (e) {
+                layer.alert('请求出错了');
             }
-        });
+        })
     }
 
     function goToErrorPage(errData) {
@@ -301,12 +304,10 @@
     function getTableRender() {
         return {
             id: 'roomListData',
-            url: '${path}/room/queryRooms', //数据接口
+            url: '${path}/room/queryRoomUses', //数据接口
             method: "POST",
             where: {
-                'roomId': getValue('roomId_q'),
-                'roomType': getValue('roomType'),
-                'buildingId': getValue('buildings')
+                'applyUserInfo.userId': getValue('userId')
             },
             even: true,
             width: "auto",
@@ -317,37 +318,36 @@
             height: 'full-58',
             page: true,  //开启分页
             parseData: function (data) {
-                tableData = data;
-                console.log("表数据:", tableData);
+                console.log("表数据:", data);
+                if (!data.flag) {
+                    layer.alert(data.message);
+                }
                 return {
-                    "code": tableData.status,
-                    "msg": tableData.message,
-                    "count": tableData.customProp,
-                    "data": tableData.resource
+                    "code": data.status,
+                    "msg": data.message,
+                    "count": data.customProp,
+                    "data": data.resource
                 };
             },
             cols: [[ //表头
                 // {field: 'chk', type: 'checkbox', fixed: 'left'},
-                {field: 'roomId', title: '房间编号', width: 120, sort: true, fixed: 'left'},
-                {field: 'roomName', title: '房间名', width: 400},
-                {field: 'roomType', title: '房间类型', width: 300, sort: true},
-                {field: 'seats', title: '座位数', width: 120},
-                {
-                    field: 'building.buildingName',
-                    title: '所属教学楼',
-                    templet: '<div>{{d.building.buildingName}}</div>',
-                    width: 190
-                },
-                {field: 'roomState', title: '能否预约', width: 130},
-                {field: 'lockReason', title: '不能预约原因', width: 400},
-
+                {field: 'appSeq', title: '预约流水号', width: 125, sort: true, fixed: 'left'},
+                {field: 'roomId', title: '房间编号', width: 120},
+                {field: 'startDate', title: '开始使用时间', width: 130, sort: true},
+                {field: 'endDate', title: '结束使用时间', width: 130},
+                {field: 'applyReason', title: '申请原因', width: 230},
+                {field: 'applyUserId', title: '申请预约用户编号', width: 150},
+                {field: 'applyDate', title: '申请提交时间', width: 120},
+                {field: 'approveState', title: '审核状态', width: 120},
+                {field: 'approveDate', title: '审核时间', width: 120},
+                {field: 'rejectReason', title: '审核不通过原因', width: 380},
                 {
                     field: 'operation', title: '操作', fixed: 'right',
                     templet: ' <div><div class="layui-btn-group">' +
                         '  <button type="button" class="layui-btn layui-btn-xs id{{d.id}}" onclick="showUseInfo({{d.roomId}})">' +
                         '    <i class="layui-icon">&#xe615;</i>' +
                         '  </button>' +
-                        '  <button type="button" class="layui-btn layui-btn-xs id{{d.id}}" onclick="approve({{d.roomId}})">' +
+                        '  <button type="button" class="layui-btn layui-btn-xs id{{d.id}}" onclick="approve({{d.appSeq}},\'1\')">' +
                         '    <i class="layui-icon">&#xe66c;</i>' +
                         '</div></div>',
                     width: 85
