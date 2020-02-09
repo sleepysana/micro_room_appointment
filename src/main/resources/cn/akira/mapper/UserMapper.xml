@@ -153,4 +153,7 @@
         SYSDATE
         )
     </insert>
+    <select id="queryBaseInfoByPrimaryKey" resultMap="BaseResultMap">
+<!--&lt;!&ndash;        SELECT t.USER_ID,t.LOGIN_NAME,t. FROM T_USER t WHERE USER_ID = &ndash;&gt;#{userId,jdbcType=INTEGER}-->
+    </select>
 </mapper>

@@ -1,8 +1,7 @@
 package cn.akira.util;
 
-import cn.akira.pojo.User;
-import org.apache.ibatis.jdbc.Null;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -21,55 +20,69 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigUtil {
-    static Document doc = null;
-    static XPath xpath = null;
+    static Document doc;
+    static XPath xpath;
+
+    private static void setUp() throws ParserConfigurationException, IOException, SAXException {
+
+        // 创建DocumentBuilderFactory
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//        factory.setValidating(true);
+        factory.setNamespaceAware(false);
+        factory.setIgnoringComments(true);
+        factory.setCoalescing(false);
+        factory.setExpandEntityReferences(true);
+
+        // 创建DocumentBuilder
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        // 设置异常处理对象
+        builder.setErrorHandler(new ErrorHandler() {
+            @Override
+            public void warning(SAXParseException exception) throws SAXException {
+                System.out.println("WARN:" + exception.getMessage());
+            }
+
+            @Override
+            public void error(SAXParseException exception) throws SAXException {
+                System.out.println("error:" + exception.getMessage());
+            }
+
+            @Override
+            public void fatalError(SAXParseException exception) throws SAXException {
+                System.out.println("fatalError:" + exception.getMessage());
+            }
+        });
+
+        // 创建Document
+        String path = ConfigUtil.class.getResource("/").getPath();
+        doc = builder.parse(path + "extra-config.xml");
+
+        // 创建XPath
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        xpath = xpathFactory.newXPath();
+    }
 
     public static String getConfigTagValue(String configId, String propertyName) throws XPathExpressionException, IOException, SAXException, ParserConfigurationException {
-        {
-            // 创建DocumentBuilderFactory
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            //factory.setValidating(true);
-            factory.setNamespaceAware(false);
-            factory.setIgnoringComments(true);
-            factory.setCoalescing(false);
-            factory.setExpandEntityReferences(true);
-
-            // 创建DocumentBuilder
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            // 设置异常处理对象
-            builder.setErrorHandler(new ErrorHandler() {
-                @Override
-                public void warning(SAXParseException exception) throws SAXException {
-                    System.out.println("WARN:" + exception.getMessage());
-                }
-
-                @Override
-                public void error(SAXParseException exception) throws SAXException {
-                    System.out.println("error:" + exception.getMessage());
-                }
-
-                @Override
-                public void fatalError(SAXParseException exception) throws SAXException {
-                    System.out.println("fatalError:" + exception.getMessage());
-                }
-            });
-
-            // 创建Document
-            String path = User.class.getResource("/").getPath();
-            doc = builder.parse(path + "extra-config.xml");
-
-            // 创建XPath
-            XPathFactory xpathFactory = XPathFactory.newInstance();
-            xpath = xpathFactory.newXPath();
+        if (doc == null || xpath == null) {
+            setUp();
         }
-        Map<String, NodeList> nodeListMap = getNodes(configId, propertyName);
-        NodeList nodes_text = nodeListMap.get("nodes_text");
-        NodeList nodes_value = nodeListMap.get("nodes_value");
+        NodeList nodes_text = (NodeList) xpath
+                .evaluate(
+                        "//config[@id='" + configId + "']/property[@name='" + propertyName + "']/text()",
+                        doc,
+                        XPathConstants.NODESET
+                );
+        NodeList nodes_value = (NodeList) xpath
+                .evaluate(
+                        "//config[@id='" + configId + "']/property[@name='" + propertyName + "']/@value",
+                        doc,
+                        XPathConstants.NODESET
+                );
         NodeList nodes = nodes_text;
         int nodesLength;
-        try{
+        try {
             nodesLength = nodes.getLength();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.err.println("我也不知道这个异常是怎么回事，有时候会出现有时候又不会出现。应该是什么东西没关闭导致的，\n" +
                     "也有可能是extra-config.xml或者getNodes里面的表达式没写对，反正目前还搞不清楚。");
             return getConfigTagValue(configId, propertyName);
@@ -90,27 +103,21 @@ public class ConfigUtil {
         return nodeValue;
     }
 
-    private static Map<String, NodeList> getNodes(String configId, String propertyName) {
-        Map<String, NodeList> nodesMap = new HashMap<>();
-        try {
-            NodeList nodes_value = (NodeList) xpath
-                    .evaluate(
-                            "//config[@id='" + configId + "']/property[@name='" + propertyName + "']/@value",
-                            doc,
-                            XPathConstants.NODESET
-                    );
-            NodeList nodes_text = (NodeList) xpath
-                    .evaluate(
-                            "//config[@id='" + configId + "']/property[@name='" + propertyName + "']/text()",
-                            doc,
-                            XPathConstants.NODESET
-                    );
-            nodesMap.put("nodes_value", nodes_value);
-            nodesMap.put("nodes_text", nodes_text);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+    public static Map<String, String> getConfigMap(String configId) throws XPathExpressionException, IOException, SAXException, ParserConfigurationException {
+        if (doc == null || xpath == null) {
+            setUp();
         }
-        return nodesMap;
+        Map<String, String> configMap = new HashMap<>();
+        NodeList nodes = (NodeList) xpath.evaluate(
+                "//config[@id='" + configId + "']//@name",
+                doc, XPathConstants.NODESET);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            NodeList childNodes = node.getChildNodes();
+            String nodeValue = childNodes.item(0).getNodeValue();
+            configMap.put(nodeValue, getConfigTagValue(configId, nodeValue));
+        }
+        return configMap;
     }
 
     public static Map<String, String> getRsaKeys() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {

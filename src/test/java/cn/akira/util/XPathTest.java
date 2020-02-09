@@ -38,10 +38,12 @@ public class XPathTest {
             public void warning(SAXParseException exception) throws SAXException {
                 System.out.println("WARN:" + exception.getMessage());
             }
+
             @Override
             public void error(SAXParseException exception) throws SAXException {
                 System.out.println("error:" + exception.getMessage());
             }
+
             @Override
             public void fatalError(SAXParseException exception) throws SAXException {
                 System.out.println("fatalError:" + exception.getMessage());
@@ -50,7 +52,7 @@ public class XPathTest {
 
         // 创建Document
         String path = this.getClass().getResource("/").getPath();
-        doc = builder.parse(path+"inventory.xml");
+        doc = builder.parse(path + "extra-config.xml");
 
         // 创建XPath
         XPathFactory xpathFactory = XPathFactory.newInstance();
@@ -79,7 +81,7 @@ public class XPathTest {
         // -----查询1997年之后的图书的标题-----
         // 一次性的表达式直接使用XPath，跳过编译
         NodeList nodes = (NodeList) xpath
-                .evaluate("//book[@year>1997]/title/text()", doc, XPathConstants.NODESET);
+                .evaluate("//book[@year>1997]/@*", doc, XPathConstants.NODESET);
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
             System.out.println(node.getNodeValue());
@@ -109,9 +111,33 @@ public class XPathTest {
     }
 
     @Test
-    public void getCompilePath(){
+    public void test4() throws XPathExpressionException {
+        NodeList nodes = (NodeList) xpath.evaluate(
+                "//config[@id='email']//@name",
+                doc, XPathConstants.NODESET);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            NodeList childNodes = node.getChildNodes();
+            String nodeValue = childNodes.item(0).getNodeValue();
+            System.out.println(nodeValue.trim());
+            NodeList evaluate = (NodeList) xpath
+                    .evaluate(
+                            "//config[@id='email']/property[@name='" + nodeValue + "']/text()",
+                            doc,
+                            XPathConstants.NODESET
+                    );
+            System.out.println(evaluate.item(0).getNodeValue().trim());
+        }
+    }
+
+    @Test
+    public void getCompilePath() {
         String path = this.getClass().getResource("/").getPath();
         System.out.println(path);
     }
 
+    @Test
+    public void test5() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
+        System.out.println(ConfigUtil.getConfigTagValue("email","address"));
+    }
 }

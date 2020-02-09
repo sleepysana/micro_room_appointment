@@ -11,7 +11,7 @@
         ]>
 <inventory>
     <book year="2000">
-        <title>Snow Crash</title>
+        <title >Snow Crash</title>
         <author>Neal Stephenson</author>
         <publisher>Spectra</publisher>
         <isbn>0553380958</isbn>

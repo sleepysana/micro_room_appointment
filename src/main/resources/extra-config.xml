@@ -26,6 +26,22 @@
         </property>
     </config>
 
+    <!--邮箱配置-->
+    <config id="email">
+        <property name="address"><!--邮箱地址-->
+            akira.pub@qq.com
+        </property>
+        <property name="password"><!--密码-->
+            qbgxkjbsncbfjcjc
+        </property>
+        <property name="smtpHost"><!--smtp服务器-->
+            smtp.qq.com
+        </property>
+        <property name="alias"><!--别名-->
+            教室预约管理系统
+        </property>
+    </config>
+
     <!--其他零星配置-->
     <config id="others">
         <!--用户默认头像Base64-->

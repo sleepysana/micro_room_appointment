@@ -46,8 +46,8 @@
                     ${SESSION_USER.loginName}
                 </a>
                 <dl class="layui-nav-child">
-                    <dd><a href="">基本资料</a></dd>
-                    <dd><a href="">安全设置</a></dd>
+                    <dd><a id="baseInfo">基本资料</a></dd>
+                    <dd><a id="securitySettings">安全设置</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item"><a id="logout">退出</a></li>
@@ -102,6 +102,8 @@
 <%--suppress ES6ConvertVarToLetConst, JSUnresolvedVariable --%>
 <script type="text/javascript">
 
+    let _layer;
+
     layui.use("element", function () {
         var element = layui.elements;
     });
@@ -129,6 +131,7 @@
 
     function load(i) {
         layui.use('layer', function () {
+            _layer = layui.layer;
             layui.layer.load(i);
         });
     }
@@ -138,6 +141,21 @@
             layui.layer.close(i);
         });
     }
+
+    $("#baseInfo").click(function () {
+        _layer.open({
+            type: 2,
+            moveOut: true,
+            scrollbar: false,
+            title: '预约教室: ',
+            closeBtn: 1,
+            area: ['785px', '510px'],
+            content: '${path}/user/baseInfoEdit/${SESSION_USER.userId}',
+            end: function () {
+                layui.table.reload("roomListData");
+            }
+        });
+    })
 </script>
 </body>
 </html>
